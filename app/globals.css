@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+@theme {
+  /* Neutrals: charcoal text on warm off-white. */
+  --color-ink: #26232b;
+  --color-ink-soft: #4d4953;
+  --color-muted: #8a8590;
+  --color-line: #ece8e5;
+  --color-cream: #faf8f7;
+  --color-sand: #f3f0ed;
+
+  /* Primary: a single rose pink with tints. */
+  --color-rose-50: #fdf3f6;
+  --color-rose-100: #fbe4eb;
+  --color-rose-200: #f5c8d6;
+  --color-rose-300: #ec9fb7;
+  --color-rose-500: #df5f86;
+  --color-rose-600: #d14672;
+  --color-rose-700: #b0365d;
+
+  /* Semantic colors, used sparingly for status. */
+  --color-success: #2f8a58;
+  --color-success-50: #eef7f2;
+  --color-success-100: #d7eee1;
+  --color-warning: #a86a12;
+  --color-warning-50: #fdf6e8;
+  --color-warning-100: #f8e7c4;
+  --color-danger: #c23b3b;
+  --color-danger-50: #fdf1f1;
+  --color-danger-100: #f7dada;
+  --color-gcash: #0a5bff;
+
+  --font-display: var(--font-jakarta), ui-sans-serif, system-ui;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui;
+
+  --shadow-card: 0 1px 2px rgb(38 35 43 / 0.04), 0 4px 14px rgb(38 35 43 / 0.05);
+  --shadow-raised: 0 2px 4px rgb(38 35 43 / 0.04), 0 12px 32px rgb(38 35 43 / 0.08);
+
+  --animate-pop-in: pop-in 0.25s ease-out both;
+  --animate-rise: rise 0.3s ease-out both;
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Card surface: white with a hairline and a soft shadow. */
+@utility card {
+  background-color: white;
+  border: 1px solid color-mix(in srgb, var(--color-line) 70%, transparent);
+  box-shadow: var(--shadow-card);
+}
+@utility press {
+  transition:
+    transform 0.12s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
+  &:active {
+    transform: scale(0.98);
+  }
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply bg-sand font-sans text-ink antialiased;
+}
+
+/* Let grid items shrink so long text truncates instead of pushing cards past the mobile column. */
+@layer base {
+  .grid > * {
+    min-width: 0;
+  }
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.015em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-rose-500);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+input,
+textarea,
+select {
+  font-size: 16px; /* prevents iOS zoom */
+}
