@@ -1,0 +1,21 @@
+# Optional: a regular Postgres instead of the embedded PGlite.
+#   docker compose up -d db
+#   DATABASE_URL=postgres://eventually:eventually@localhost:54329/eventually pnpm db:seed
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: eventually
+      POSTGRES_PASSWORD: eventually
+      POSTGRES_DB: eventually
+    ports:
+      - "54329:5432"
+    volumes:
+      - eventually-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eventually"]
+      interval: 2s
+      retries: 20
+
+volumes:
+  eventually-pg:
