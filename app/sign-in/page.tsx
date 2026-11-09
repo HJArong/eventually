@@ -5,6 +5,7 @@ import { Button, DemoNote } from "@/components/ui";
 import { SubmitButton } from "@/components/submit-button";
 import { config, supabaseAuthEnabled } from "@/lib/config";
 import { getViewer, homeFor } from "@/lib/auth/session";
+import { isEphemeralDb } from "@/lib/db";
 import { demoSignIn, signInWithGoogle } from "@/app/actions/auth";
 import { MagicLinkForm } from "./magic-link-form";
 
@@ -16,15 +17,26 @@ const ERRORS: Record<string, string> = {
 };
 
 export default async function SignIn({ searchParams }: PageProps<"/sign-in">) {
-  const viewer = await getViewer();
+  const db = await isEphemeralDb().then(
+    (ephemeral) => ({ ok: true, ephemeral }),
+    () => ({ ok: false, ephemeral: false }),
+  );
+  const viewer = db.ok ? await getViewer() : null;
   if (viewer) redirect(homeFor(viewer.role));
   const { error } = await searchParams;
+  const ephemeral = config.demoMode && db.ephemeral;
 
   return (
     <main className="flex min-h-dvh flex-col px-5 pt-6 pb-10">
       <Logo size={28} />
       <h1 className="mt-10 text-[28px] leading-tight font-semibold">Welcome to Eventually</h1>
       <p className="mt-2 text-sm text-muted">Sign in or create an account. It takes a few seconds.</p>
+
+      {!db.ok && (
+        <p role="alert" className="mt-4 rounded-xl bg-danger-50 px-4 py-3 text-sm font-medium text-danger">
+          The database isn&apos;t reachable, so sign-in is unavailable. The server logs have the details.
+        </p>
+      )}
 
       {typeof error === "string" && ERRORS[error] && (
         <p role="alert" className="mt-4 rounded-xl bg-danger-50 px-4 py-3 text-sm font-medium text-danger">
@@ -74,6 +86,11 @@ export default async function SignIn({ searchParams }: PageProps<"/sign-in">) {
             </form>
           </div>
           <DemoNote className="mt-4">Demo mode: vendors auto-reply with a sample quote a few seconds after you ask.</DemoNote>
+          {ephemeral && (
+            <DemoNote className="mt-2">
+              This preview runs on a temporary in-memory database, so your changes may reset at any time.
+            </DemoNote>
+          )}
         </section>
       )}
     </main>

@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
-import { config } from "@/lib/config";
+import { config, serverless, supabaseAuthEnabled } from "@/lib/config";
 import { getDb } from "@/lib/db";
 import { profiles } from "@/lib/db/schema";
 
@@ -11,9 +11,21 @@ export const SESSION_COOKIE = "ev_session";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
 const DEV_SECRET = "eventually-local-dev-secret-change-me";
 
+let warnedDevSecret = false;
+
 function secret(): string {
   if (config.authSecret) return config.authSecret;
-  if (process.env.VERCEL) throw new Error("AUTH_SECRET must be set in hosted environments");
+  if (serverless) {
+    // Demo mode with local sign-in already lets anyone sign in as any email, so the dev secret adds no
+    // exposure there; real accounts (DEMO_MODE=false or Supabase Auth) must not use a public secret.
+    if (!config.demoMode || supabaseAuthEnabled) {
+      throw new Error("AUTH_SECRET must be set in hosted environments (openssl rand -base64 32)");
+    }
+    if (!warnedDevSecret) {
+      warnedDevSecret = true;
+      console.warn("[eventually] AUTH_SECRET is not set; using the built-in demo secret.");
+    }
+  }
   return DEV_SECRET;
 }
 
