@@ -93,5 +93,6 @@ export const BUDGET_PRESETS = [
   { label: "₱50–100k", value: 75_000 },
   { label: "₱100–200k", value: 150_000 },
   { label: "₱200–350k", value: 275_000 },
-  { label: "₱350k+", value: 450_000 },
+  { label: "₱350–600k", value: 475_000 },
+  { label: "₱600k+", value: 750_000 },
 ] as const;

@@ -22,10 +22,10 @@ export function PaySheet(props: {
   const [method, setMethod] = useState<"gcash" | "card">("gcash");
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-[440px] animate-rise rounded-t-[2rem] border-2 border-b-0 border-ink bg-cream px-5 pt-3 pb-8">
-      <div className="mx-auto mb-4 h-1.5 w-12 rounded-full bg-ink/20" />
-      <p className="text-xs font-extrabold tracking-wider text-muted uppercase">Deposit to lock the date</p>
-      <p className="mt-1 font-display text-4xl font-extrabold">{formatPeso(props.deposit)}</p>
+    <div className="fixed inset-x-0 bottom-0 z-50 mx-auto max-w-[440px] animate-rise rounded-t-3xl bg-white shadow-raised px-5 pt-3 pb-8">
+      <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-line" />
+      <p className="text-sm text-muted">Deposit to lock the date</p>
+      <p className="mt-1 text-[34px] leading-tight font-semibold tabular-nums">{formatPeso(props.deposit)}</p>
       <p className="text-sm text-muted">
         {props.depositPct}% of {formatPeso(props.total)} for {props.vendorName} · balance {formatPeso(props.balance)} on the day
       </p>
@@ -40,11 +40,11 @@ export function PaySheet(props: {
             role="radio"
             aria-checked={method === "gcash"}
             onClick={() => setMethod("gcash")}
-            className={cn("flex items-center gap-2 rounded-2xl border-2 p-3 text-left", method === "gcash" ? "border-ink bg-white shadow-pop-sm" : "border-ink/15 bg-white/60")}
+            className={cn("flex items-center gap-2 rounded-xl border p-3 text-left", method === "gcash" ? "border-rose-300 bg-rose-50/60" : "border-line bg-white")}
           >
-            <span className="flex size-9 items-center justify-center rounded-xl bg-gcash font-display text-lg font-extrabold text-white">G</span>
+            <span className="flex size-9 items-center justify-center rounded-xl bg-gcash font-display text-lg font-semibold text-white">G</span>
             <span>
-              <span className="block text-sm font-extrabold">GCash</span>
+              <span className="block text-sm font-semibold">GCash</span>
               <span className="block text-[11px] text-muted">Demo wallet</span>
             </span>
           </button>
@@ -53,21 +53,21 @@ export function PaySheet(props: {
             role="radio"
             aria-checked={method === "card"}
             onClick={() => setMethod("card")}
-            className={cn("flex items-center gap-2 rounded-2xl border-2 p-3 text-left", method === "card" ? "border-ink bg-white shadow-pop-sm" : "border-ink/15 bg-white/60")}
+            className={cn("flex items-center gap-2 rounded-xl border p-3 text-left", method === "card" ? "border-rose-300 bg-rose-50/60" : "border-line bg-white")}
           >
-            <span className="flex size-9 items-center justify-center rounded-xl bg-ink text-white">
+            <span className="flex size-9 items-center justify-center rounded-xl bg-sand text-ink-soft">
               <CreditCard className="size-5" />
             </span>
             <span>
-              <span className="block text-sm font-extrabold">Card</span>
+              <span className="block text-sm font-semibold">Card</span>
               <span className="block text-[11px] text-muted">Visa / Mastercard</span>
             </span>
           </button>
         </div>
 
         {method === "gcash" ? (
-          <div className="rounded-2xl bg-gcash p-4 text-white">
-            <p className="flex items-center gap-2 text-sm font-bold">
+          <div className="rounded-xl bg-gcash p-4 text-white">
+            <p className="flex items-center gap-2 text-sm font-semibold">
               <Smartphone className="size-4" /> 0917 ••• 4321 · Demo account
             </p>
             <label className="mt-3 block text-xs font-semibold text-white/80" htmlFor="mpin">
@@ -79,25 +79,25 @@ export function PaySheet(props: {
               maxLength={4}
               defaultValue="1234"
               type="password"
-              className="mt-1 h-11 w-32 rounded-xl border-2 border-white/40 bg-white/10 px-3 text-center text-lg tracking-[0.5em] focus:border-white focus:outline-none"
+              className="mt-1 h-11 w-32 rounded-xl border border-white/40 bg-white/10 px-3 text-center text-lg tracking-[0.5em] focus:border-white focus:outline-none"
             />
           </div>
         ) : (
-          <div className="grid gap-2 rounded-2xl border-2 border-ink/15 bg-white p-4">
-            <input aria-label="Card number" defaultValue="4242 4242 4242 4242" className="h-11 rounded-xl border-2 border-ink/15 px-3 font-mono" />
+          <div className="grid gap-2 rounded-xl border border-line bg-white p-4">
+            <input aria-label="Card number" defaultValue="4242 4242 4242 4242" className="h-11 rounded-xl border border-line px-3 font-mono" />
             <div className="grid grid-cols-2 gap-2">
-              <input aria-label="Expiry" defaultValue="12/29" className="h-11 rounded-xl border-2 border-ink/15 px-3 font-mono" />
-              <input aria-label="CVC" defaultValue="123" className="h-11 rounded-xl border-2 border-ink/15 px-3 font-mono" />
+              <input aria-label="Expiry" defaultValue="12/29" className="h-11 rounded-xl border border-line px-3 font-mono" />
+              <input aria-label="CVC" defaultValue="123" className="h-11 rounded-xl border border-line px-3 font-mono" />
             </div>
           </div>
         )}
 
         {state.error && (
-          <p role="alert" className="text-sm font-semibold text-sunset">
+          <p role="alert" className="text-sm font-semibold text-danger">
             {state.error}
           </p>
         )}
-        <SubmitButton size="lg" variant={method === "gcash" ? "ube" : "primary"} pendingText="Processing…" className={method === "gcash" ? "bg-gcash" : ""}>
+        <SubmitButton size="lg" variant={method === "gcash" ? "primary" : "primary"} pendingText="Processing…" className={method === "gcash" ? "bg-gcash" : ""}>
           <Lock className="size-4" /> Pay {formatPeso(props.deposit)}
         </SubmitButton>
         <p className="flex items-center justify-center gap-1.5 text-xs text-muted">

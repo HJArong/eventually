@@ -31,7 +31,7 @@ export default async function Feed({ searchParams }: PageProps<"/feed">) {
         title="Feed"
         subtitle="Fresh work from Cebu vendors"
         right={
-          <Link href="/saved" className="flex size-10 items-center justify-center rounded-full border-2 border-ink bg-white" aria-label="Saved posts">
+          <Link href="/saved" className="flex size-10 items-center justify-center rounded-full border border-line bg-white" aria-label="Saved posts">
             <Bookmark className="size-5" />
           </Link>
         }

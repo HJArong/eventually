@@ -11,10 +11,10 @@ export function RequestRow({ row, catalog }: { row: VendorRequestRow; catalog: C
   const type = catalog.eventTypeBySlug.get(event.eventType)?.name;
   const needsQuote = request.status === "requested";
   return (
-    <div className="flex min-w-0 items-center gap-3 rounded-3xl border-2 border-ink bg-white p-3 shadow-pop-sm">
+    <div className="flex min-w-0 items-center gap-3 rounded-2xl border border-line bg-white p-3 shadow-card">
       <Avatar name={planner.displayName} size={44} />
       <Link href={row.threadId ? `/vendor/inbox/${row.threadId}` : `/vendor/requests/${request.id}/quote`} className="min-w-0 flex-1">
-        <p className="truncate font-display font-extrabold">
+        <p className="truncate font-display font-semibold">
           {firstName(planner.displayName)} · {type}
         </p>
         <p className="truncate text-xs font-semibold text-muted">
@@ -27,7 +27,7 @@ export function RequestRow({ row, catalog }: { row: VendorRequestRow; catalog: C
       {needsQuote ? (
         <Link
           href={`/vendor/requests/${request.id}/quote`}
-          className="shrink-0 rounded-full border-2 border-ink bg-mango px-3 py-1.5 text-xs font-extrabold shadow-pop-sm press"
+          className="shrink-0 rounded-full bg-rose-600 px-3.5 py-1.5 text-xs font-semibold text-white press"
         >
           Quote
         </Link>

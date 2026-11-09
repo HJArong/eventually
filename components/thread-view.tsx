@@ -27,7 +27,7 @@ export function Thread({ view, catalog, basePath }: { view: ThreadView; catalog:
           <div className="flex items-center gap-2">
             {status && <StatusPill status={status} />}
             {side === "planner" && (
-              <Link href={`/vendors/${vendor.slug}`} className="text-xs font-bold text-ube">
+              <Link href={`/vendors/${vendor.slug}`} className="text-xs font-semibold text-rose-600">
                 Profile
               </Link>
             )}
@@ -42,7 +42,7 @@ export function Thread({ view, catalog, basePath }: { view: ThreadView; catalog:
           const mine = m.senderRole === side;
           if (m.kind === "system") {
             return (
-              <li key={m.id} className="mx-auto max-w-[90%] animate-rise rounded-full bg-ink/5 px-3 py-1.5 text-center text-xs font-semibold text-ink-soft">
+              <li key={m.id} className="mx-auto max-w-[90%] animate-rise rounded-full bg-sand px-3 py-1.5 text-center text-xs text-muted">
                 {m.body}
               </li>
             );
@@ -53,15 +53,15 @@ export function Thread({ view, catalog, basePath }: { view: ThreadView; catalog:
             const area = req.deliveryAreaId ? catalog.areaById.get(req.deliveryAreaId)?.name : null;
             const canQuote = side === "vendor" && ["requested", "quoted", "expired"].includes(req.status);
             return (
-              <li key={m.id} className="animate-rise rounded-3xl border-2 border-ink bg-sand p-3.5">
-                <p className="flex items-center gap-1.5 text-[11px] font-extrabold tracking-wider text-ink-soft uppercase">
+              <li key={m.id} className="card animate-rise rounded-2xl p-4">
+                <p className="flex items-center gap-1.5 text-xs font-medium text-muted">
                   <ClipboardList className="size-3.5" /> Quote request
-                  <span className="ml-auto font-semibold tracking-normal normal-case">{clockTime(m.createdAt)}</span>
+                  <span className="ml-auto">{clockTime(m.createdAt)}</span>
                 </p>
-                <p className="mt-1 font-display text-[17px] leading-snug font-extrabold">
+                <p className="mt-1.5 text-base leading-snug font-semibold">
                   {req.requestedServices.map((s) => `${s.name}${s.qty > 1 ? ` ×${s.qty}` : ""}`).join(", ") || "General inquiry"}
                 </p>
-                <p className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs font-semibold text-muted">
+                <p className="mt-1.5 flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-muted">
                   <span className="inline-flex items-center gap-1">
                     <CalendarDays className="size-3.5" /> {formatDate(req.date, { weekday: true })}
                     {req.timeText ? ` · ${req.timeText}` : ""}
@@ -76,7 +76,7 @@ export function Thread({ view, catalog, basePath }: { view: ThreadView; catalog:
                   )}
                   {req.budgetPhp ? <span>Budget ~{formatPeso(req.budgetPhp)}</span> : null}
                 </p>
-                {m.body && <p className="mt-2 rounded-2xl bg-white px-3 py-2 text-sm">“{m.body}”</p>}
+                {m.body && <p className="mt-3 rounded-xl bg-sand px-3 py-2 text-sm text-ink-soft">“{m.body}”</p>}
                 {canQuote && (
                   <div className="mt-3 flex gap-2">
                     <LinkButton href={`/vendor/requests/${req.id}/quote`} size="sm" variant="primary">
@@ -99,16 +99,16 @@ export function Thread({ view, catalog, basePath }: { view: ThreadView; catalog:
             const awaitingDeposit = q.status === "accepted" && req.status === "accepted";
             const booked = q.status === "accepted" && ["deposit_paid", "confirmed"].includes(req.status);
             return (
-              <li key={m.id} className={cn("pop animate-pop-in rounded-3xl p-4", booked && "bg-calamansi-50")}>
+              <li key={m.id} className={cn("card animate-pop-in rounded-2xl p-4", booked && "bg-success-50")}>
                 <div className="flex items-center justify-between gap-2">
-                  <p className="text-[11px] font-extrabold tracking-wider text-ink-soft uppercase">
+                  <p className="text-xs font-medium text-muted">
                     Quote · valid until {formatDate(q.validUntil)}
                   </p>
                   {q.status !== "sent" && q.status !== "accepted" && (
-                    <span className="rounded-full bg-sand px-2 py-0.5 text-[11px] font-bold text-muted capitalize">{q.status}</span>
+                    <span className="rounded-full bg-sand px-2 py-0.5 text-[11px] font-semibold text-muted capitalize">{q.status}</span>
                   )}
                   {booked && (
-                    <span className="inline-flex -rotate-3 items-center gap-1 rounded-full border-2 border-ink bg-calamansi px-2 py-0.5 text-[11px] font-extrabold text-white">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-success-50 px-2 py-0.5 text-[11px] font-medium text-success">
                       <BadgeCheck className="size-3.5" /> Booked
                     </span>
                   )}
@@ -122,18 +122,18 @@ export function Thread({ view, catalog, basePath }: { view: ThreadView; catalog:
                           {i.label}
                           {i.qty > 1 && <span className="text-muted"> × {i.qty}</span>}
                         </td>
-                        <td className="py-0.5 text-right font-semibold tabular-nums">{formatPeso(i.qty * i.unitPricePhp)}</td>
+                        <td className="py-0.5 text-right font-medium tabular-nums">{formatPeso(i.qty * i.unitPricePhp)}</td>
                       </tr>
                     ))}
                   </tbody>
                   <tfoot>
-                    <tr className="border-t-2 border-ink/10">
-                      <td className="pt-2 font-display text-base font-extrabold">Total</td>
-                      <td className="pt-2 text-right font-display text-lg font-extrabold tabular-nums">{formatPeso(totals.total)}</td>
+                    <tr className="border-t border-line">
+                      <td className="pt-2.5 text-[15px] font-semibold">Total</td>
+                      <td className="pt-2.5 text-right text-lg font-semibold tabular-nums">{formatPeso(totals.total)}</td>
                     </tr>
                     <tr>
                       <td className="text-xs text-muted">Deposit {q.depositPct}%</td>
-                      <td className="text-right text-xs font-semibold text-muted tabular-nums">{formatPeso(totals.deposit)}</td>
+                      <td className="text-right text-xs text-muted tabular-nums">{formatPeso(totals.deposit)}</td>
                     </tr>
                   </tfoot>
                 </table>
@@ -155,12 +155,12 @@ export function Thread({ view, catalog, basePath }: { view: ThreadView; catalog:
                   </div>
                 )}
                 {side === "planner" && awaitingDeposit && (
-                  <LinkButton href={`${basePath}/${view.thread.id}/pay/${q.id}`} variant="mango" className="mt-4 w-full">
+                  <LinkButton href={`${basePath}/${view.thread.id}/pay/${q.id}`} variant="primary" className="mt-4 w-full">
                     Pay {formatPeso(totals.deposit)} deposit
                   </LinkButton>
                 )}
                 {side === "planner" && open && <DemoNote className="mt-3">Demo: the {q.depositPct}% deposit is “paid” via a mock GCash screen.</DemoNote>}
-                {side === "vendor" && open && <p className="mt-3 text-xs font-semibold text-muted">Waiting for {planner.displayName.split(" ")[0]} to accept.</p>}
+                {side === "vendor" && open && <p className="mt-3 text-xs text-muted">Waiting for {planner.displayName.split(" ")[0]} to accept.</p>}
               </li>
             );
           }
@@ -168,13 +168,13 @@ export function Thread({ view, catalog, basePath }: { view: ThreadView; catalog:
             <li key={m.id} className={cn("flex animate-rise", mine ? "justify-end" : "justify-start")}>
               <div
                 className={cn(
-                  "max-w-[80%] rounded-3xl border-2 px-3.5 py-2 text-[15px]",
-                  mine ? "rounded-br-md border-ink bg-ink text-white" : "rounded-bl-md border-ink/15 bg-white",
+                  "max-w-[80%] rounded-2xl px-3.5 py-2 text-[15px]",
+                  mine ? "rounded-br-md bg-rose-600 text-white" : "rounded-bl-md bg-white shadow-card",
                 )}
               >
                 {m.imageUrl && (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={m.imageUrl} alt="Shared photo" className="mb-1.5 max-h-64 w-full rounded-2xl object-cover" />
+                  <img src={m.imageUrl} alt="Shared photo" className="mb-1.5 max-h-64 w-full rounded-xl object-cover" />
                 )}
                 {m.body && <p className="whitespace-pre-wrap">{m.body}</p>}
                 <p className={cn("mt-0.5 text-right text-[10px]", mine ? "text-white/60" : "text-muted")}>{clockTime(m.createdAt)}</p>

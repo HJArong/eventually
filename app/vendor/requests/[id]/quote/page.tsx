@@ -40,8 +40,8 @@ export default async function QuotePage({ params }: PageProps<"/vendor/requests/
     <main>
       <AppHeader title="Send quote" back="/vendor/requests" right={<StatusPill status={request.status} />} />
       <div className="px-5 pt-4">
-        <div className="rounded-3xl border-2 border-ink bg-sand p-4">
-          <p className="font-display text-lg leading-tight font-extrabold">
+        <div className="rounded-2xl border border-line bg-sand p-4">
+          <p className="font-display text-lg leading-tight font-semibold">
             {firstName(planner.displayName)} · {event.title}
           </p>
           <p className="mt-1 flex flex-wrap gap-x-3 gap-y-0.5 text-xs font-semibold text-muted">
@@ -59,7 +59,7 @@ export default async function QuotePage({ params }: PageProps<"/vendor/requests/
             )}
             {request.budgetPhp ? <span>Budget ~{formatPeso(request.budgetPhp)}</span> : null}
           </p>
-          {request.notes && <p className="mt-2 rounded-2xl bg-white px-3 py-2 text-sm">“{request.notes}”</p>}
+          {request.notes && <p className="mt-2 rounded-xl bg-white px-3 py-2 text-sm">“{request.notes}”</p>}
         </div>
       </div>
       {canQuote ? (

@@ -374,6 +374,8 @@ export const VENDORS: Record<CategorySlug, VendorSeed[]> = {
         s("18 roses debut backdrop", "Flower wall, balloon garland, marquee 18 and throne chair.", "flat", 22000),
         s("Full venue styling", "Backdrop, centerpieces, ceiling treatment and entrance.", "flat", 48000),
         s("18 roses & candles set", "18 long-stem roses and 18 candle holders, styled.", "flat", 5500),
+        s("Wedding church & reception styling", "Aisle florals, church entrance, reception backdrop and centerpieces.", "flat", 58000),
+        s("Bridal bouquet & entourage flowers", "Bridal bouquet, boutonnieres and entourage flowers, fresh from Mantalongon.", "flat", 9500),
       ],
     },
     { name: "Pastel Pabalo Styling", area: "cebu-city" },

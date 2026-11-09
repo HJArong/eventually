@@ -20,10 +20,10 @@ export default async function VendorDashboard() {
     getCatalog(),
   ]);
   const tiles = [
-    { label: "New requests", value: stats.newRequests, tone: "bg-mango" },
-    { label: "Profile views", value: vendor.profileViews, tone: "bg-white" },
-    { label: "Quotes sent", value: stats.quotesSent, tone: "bg-white" },
-    { label: "Booked", value: stats.booked, tone: "bg-calamansi-100" },
+    { label: "New requests", value: stats.newRequests, accent: true },
+    { label: "Profile views", value: vendor.profileViews },
+    { label: "Quotes sent", value: stats.quotesSent },
+    { label: "Booked", value: stats.booked },
   ];
 
   return (
@@ -32,7 +32,7 @@ export default async function VendorDashboard() {
         title={vendor.name}
         subtitle={`${catalog.categoryById.get(vendor.categoryId)?.name} · ${catalog.areaById.get(vendor.baseAreaId)?.name}`}
         right={
-          <Link href={`/vendors/${vendor.slug}`} className="text-xs font-bold text-ube">
+          <Link href={`/vendors/${vendor.slug}`} className="text-xs font-semibold text-rose-600">
             View shop
           </Link>
         }
@@ -40,18 +40,18 @@ export default async function VendorDashboard() {
       <div className="px-5 pt-4">
         <div className="grid grid-cols-2 gap-3">
           {tiles.map((t) => (
-            <div key={t.label} className={cn("pop rounded-3xl p-3.5", t.tone)}>
-              <p className="text-xs font-bold text-ink-soft">{t.label}</p>
-              <p className="font-display text-3xl font-extrabold tabular-nums">{t.value}</p>
+            <div key={t.label} className="card rounded-2xl p-4">
+              <p className="text-xs text-muted">{t.label}</p>
+              <p className={cn("mt-1 text-[28px] leading-none font-semibold tabular-nums", "accent" in t && t.accent && "text-rose-600")}>{t.value}</p>
             </div>
           ))}
         </div>
 
         {config.demoMode && (
-          <form action={toggleAutoRespondAction} className="mt-4 flex items-center gap-3 rounded-3xl border-2 border-dashed border-ink/25 bg-white/70 p-3">
-            <Bot className="size-6 shrink-0 text-ube" />
+          <form action={toggleAutoRespondAction} className="mt-4 flex items-center gap-3 rounded-2xl bg-sand p-3.5">
+            <Bot className="size-5 shrink-0 text-ink-soft" strokeWidth={1.8} />
             <p className="flex-1 text-sm">
-              <span className="font-bold">Demo auto-responder is {vendor.autoRespond ? "on" : "off"}.</span>{" "}
+              <span className="font-medium">Demo auto-responder is {vendor.autoRespond ? "on" : "off"}.</span>{" "}
               <span className="text-muted">{vendor.autoRespond ? "New requests get a sample quote in seconds." : "You answer requests yourself."}</span>
             </p>
             <Button size="sm" variant="outline" type="submit">
@@ -63,7 +63,7 @@ export default async function VendorDashboard() {
         <section className="mt-6">
           <SectionTitle
             action={
-              <Link href="/vendor/requests" className="text-sm font-bold text-ube">
+              <Link href="/vendor/requests" className="text-sm font-semibold text-rose-600">
                 All requests
               </Link>
             }

@@ -15,6 +15,23 @@ export type PackageSeed = {
 
 export const PACKAGES: PackageSeed[] = [
   {
+    title: "Cebu City Wedding Essentials",
+    tagline: "The reception, sorted: hall, buffet, sound and a host",
+    eventType: "wedding",
+    area: "cebu-city",
+    paxMin: 100,
+    paxMax: 150,
+    description:
+      "A complete reception in the city: an air-conditioned Lahug hall, a buffet for your guests, lights & sounds with an LED wall, and a bilingual host who runs the program with your coordinator.",
+    cover: "/seed/venue-hall.webp",
+    items: [
+      { vendor: "Casa Mahogany Events Hall", qtyRule: "fixed" },
+      { vendor: "Kusina Sugbo Catering", qtyRule: "per_pax" },
+      { vendor: "Sugbo Lights & Sounds", qtyRule: "fixed" },
+      { vendor: "Host Migs", service: 1, qtyRule: "fixed" },
+    ],
+  },
+  {
     title: "Debut Starter",
     tagline: "Everything for a classic 18th, minus the stress",
     eventType: "debut",

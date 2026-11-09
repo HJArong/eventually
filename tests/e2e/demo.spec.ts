@@ -40,7 +40,7 @@ test("demo script: planner books, vendor quotes", async ({ page, browser }, test
   await signInAs(page, "planner");
 
   // Home + event dashboard
-  await expect(page.getByText("Sofia’s 18th Debut").or(page.getByText("Sofia's 18th Debut")).first()).toBeVisible();
+  await expect(page.getByText("Hazel’s Wedding").or(page.getByText("Hazel's Wedding")).first()).toBeVisible();
   await shot(page, "03-home");
   await beat(page);
   await page.goto("/event");
@@ -50,14 +50,14 @@ test("demo script: planner books, vendor quotes", async ({ page, browser }, test
   // Package → request quotes from every vendor in it
   await page.goto("/packages");
   await shot(page, "05-packages");
-  await page.getByRole("link", { name: /Debut Starter/ }).first().click();
-  await page.waitForURL(/\/packages\/debut-starter/);
+  await page.getByRole("link", { name: /Cebu City Wedding Essentials/ }).first().click();
+  await page.waitForURL(/\/packages\/cebu-city-wedding-essentials/);
   await beat(page);
   await shot(page, "06-package-builder");
   const hostRow = page.locator("li", { hasText: "Host Migs" });
   await hostRow.getByRole("button", { name: "Swap" }).click();
   await beat(page);
-  await hostRow.locator("button.rounded-2xl").nth(1).click();
+  await hostRow.locator("button[data-alternative]").nth(1).click();
   await expect(page.locator("li", { hasText: "swapped" })).toBeVisible();
   await beat(page);
   await page.getByRole("button", { name: /Request quotes from all 4/ }).click();
@@ -151,8 +151,8 @@ test("demo script: planner books, vendor quotes", async ({ page, browser }, test
 
   await page.goto("/vendor/posts/new");
   await page.locator("label:has(input[name=samplePhotos])").first().click();
-  await page.getByLabel("Caption").pressSequentially("Two lechon for Sofia's debut this March!", { delay: PACE ? 25 : 0 });
-  await page.locator("label", { hasText: /^Debut$/ }).click();
+  await page.getByLabel("Caption").pressSequentially("Two lechon for a Lahug wedding this May!", { delay: PACE ? 25 : 0 });
+  await page.locator("label", { hasText: /^Wedding$/ }).click();
   await shot(page, "21-vendor-new-post");
   await page.getByRole("button", { name: "Publish to feed" }).click();
   await page.waitForURL(/\/vendor\/feed\?posted=1/);

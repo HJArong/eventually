@@ -52,12 +52,12 @@ export function RequestForm({
       <input type="hidden" name="vendorId" value={vendor.id} />
       <input type="hidden" name="services" value={payload} />
 
-      <div className="pop flex items-center gap-3 rounded-3xl p-3">
-        <div className="relative size-14 shrink-0 overflow-hidden rounded-full border-2 border-ink">
+      <div className="card flex items-center gap-3 rounded-2xl p-3">
+        <div className="relative size-14 shrink-0 overflow-hidden rounded-full border border-line">
           {vendor.coverUrl && <Image src={vendor.coverUrl} alt="" fill sizes="56px" className="object-cover" />}
         </div>
         <div>
-          <p className="font-display text-lg leading-tight font-extrabold">{vendor.name}</p>
+          <p className="font-display text-lg leading-tight font-semibold">{vendor.name}</p>
           <p className="text-sm text-muted">
             {vendor.category} · from {formatPeso(cheapest)}
           </p>
@@ -93,12 +93,12 @@ export function RequestForm({
               <div
                 key={s.id}
                 className={cn(
-                  "flex items-center gap-3 rounded-2xl border-2 p-3 transition",
-                  on ? "border-ink bg-mango-50 shadow-pop-sm" : "border-ink/15 bg-white",
+                  "flex items-center gap-3 rounded-xl border p-3 transition",
+                  on ? "border-rose-300 bg-rose-50" : "border-line bg-white",
                 )}
               >
                 <button type="button" onClick={() => toggle(s)} aria-pressed={on} className="min-w-0 flex-1 text-left">
-                  <span className="block font-bold">{s.name}</span>
+                  <span className="block font-semibold">{s.name}</span>
                   <span className="text-sm text-muted">
                     {formatPeso(s.pricePhp)}
                     {UNIT_LABEL[s.unit]}
@@ -106,13 +106,13 @@ export function RequestForm({
                 </button>
                 {on && s.unit !== "flat" ? (
                   <div className="flex items-center gap-1.5">
-                    <button type="button" onClick={() => bump(s, -1)} className="flex size-8 items-center justify-center rounded-full border-2 border-ink bg-white" aria-label={`Fewer ${s.name}`}>
+                    <button type="button" onClick={() => bump(s, -1)} className="flex size-8 items-center justify-center rounded-full border border-line bg-white" aria-label={`Fewer ${s.name}`}>
                       <Minus className="size-4" />
                     </button>
-                    <span className="w-9 text-center font-extrabold tabular-nums" aria-live="polite">
+                    <span className="w-9 text-center font-semibold tabular-nums" aria-live="polite">
                       {selected[s.id]}
                     </span>
-                    <button type="button" onClick={() => bump(s, 1)} className="flex size-8 items-center justify-center rounded-full border-2 border-ink bg-white" aria-label={`More ${s.name}`}>
+                    <button type="button" onClick={() => bump(s, 1)} className="flex size-8 items-center justify-center rounded-full border border-line bg-white" aria-label={`More ${s.name}`}>
                       <Plus className="size-4" />
                     </button>
                   </div>
@@ -120,7 +120,7 @@ export function RequestForm({
                   <button
                     type="button"
                     onClick={() => toggle(s)}
-                    className={cn("rounded-full border-2 border-ink px-3 py-1 text-xs font-extrabold", on ? "bg-ink text-white" : "bg-white")}
+                    className={cn("rounded-full border border-line px-3 py-1 text-xs font-semibold", on ? "border-rose-200 bg-rose-50 text-rose-700" : "bg-white text-ink-soft")}
                   >
                     {on ? "Added" : "Add"}
                   </button>
@@ -131,7 +131,7 @@ export function RequestForm({
         </div>
         {estimate > 0 && (
           <p className="mt-2 text-sm font-semibold text-muted">
-            Estimate at listed prices: <span className="font-extrabold text-ink">{formatPeso(estimate)}</span>
+            Estimate at listed prices: <span className="font-semibold text-ink">{formatPeso(estimate)}</span>
           </p>
         )}
       </div>
@@ -154,7 +154,7 @@ export function RequestForm({
       </div>
 
       {state.error && (
-        <p role="alert" className="text-sm font-semibold text-sunset">
+        <p role="alert" className="text-sm font-semibold text-danger">
           {state.error}
         </p>
       )}

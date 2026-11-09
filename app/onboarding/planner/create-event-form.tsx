@@ -14,17 +14,17 @@ export function CreateEventForm({ eventTypes, areas }: { eventTypes: Option[]; a
   const [state, action] = useActionState<FormState, FormData>(createEventAction, {});
   const err = (k: string) =>
     state.fieldErrors?.[k] ? (
-      <p role="alert" className="mt-1.5 text-sm font-semibold text-sunset">
+      <p role="alert" className="mt-1.5 text-sm font-semibold text-danger">
         {state.fieldErrors[k]}
       </p>
     ) : null;
 
   return (
     <form action={action} className="grid gap-6 px-5 pt-5">
-      <div className="pop relative h-36 overflow-hidden rounded-3xl">
+      <div className="card relative h-36 overflow-hidden rounded-2xl">
         <Image src="/seed/styling-roses.webp" alt="" fill sizes="440px" className="object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-ink/20 to-transparent" />
-        <p className="absolute bottom-3 left-4 right-4 font-display text-xl leading-tight font-extrabold text-white">
+        <p className="absolute bottom-3 left-4 right-4 font-display text-xl leading-tight font-semibold text-white">
           Plan your Cebu celebration without the chaos
         </p>
       </div>
@@ -37,8 +37,8 @@ export function CreateEventForm({ eventTypes, areas }: { eventTypes: Option[]; a
 
       <div>
         <Label htmlFor="celebrant">Whose event?</Label>
-        <Input id="celebrant" name="celebrant" placeholder="e.g. Sofia" autoComplete="off" />
-        <p className="mt-1 text-xs text-muted">We’ll call it “Sofia’s 18th Debut”.</p>
+        <Input id="celebrant" name="celebrant" placeholder="e.g. Hazel" autoComplete="off" />
+        <p className="mt-1 text-xs text-muted">We’ll use it in the event name, like “Hazel’s Wedding”.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-3">

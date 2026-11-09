@@ -21,10 +21,10 @@ export default async function Saved() {
     <main>
       <AppHeader title="Saved & settings" back="/home" />
       <section className="px-5 pt-4">
-        <div className="pop flex items-center gap-3 rounded-3xl p-4">
-          <Avatar name={viewer.displayName || "You"} size={48} />
+        <div className="card flex items-center gap-3 rounded-2xl p-4">
+          <Avatar name={viewer.displayName || "You"} size={48} className="bg-sand text-ink-soft" />
           <div className="min-w-0 flex-1">
-            <p className="font-display text-lg font-extrabold">{viewer.displayName}</p>
+            <p className="font-display text-lg font-semibold">{viewer.displayName}</p>
             <p className="truncate text-sm text-muted">{viewer.email}</p>
           </div>
           <form action={signOut}>

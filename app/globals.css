@@ -1,43 +1,48 @@
 @import "tailwindcss";
 
 @theme {
-  --color-ink: #1d1233;
-  --color-ink-soft: #3b2f52;
-  --color-muted: #6e6482;
-  --color-line: #e7dccd;
-  --color-cream: #fff8ef;
-  --color-sand: #f6ecdf;
-  --color-ube: #6b3fd4;
-  --color-ube-50: #f4efff;
-  --color-ube-100: #e7dcff;
-  --color-ube-700: #4f2aa6;
-  --color-mango: #ffc23d;
-  --color-mango-50: #fff8e3;
-  --color-mango-100: #ffeebd;
-  --color-sunset: #ff6b4a;
-  --color-sunset-50: #fff1ec;
-  --color-sunset-100: #ffd9cf;
-  --color-calamansi: #5fae2e;
-  --color-calamansi-50: #effae6;
-  --color-calamansi-100: #d9f1c6;
-  --color-sky: #2f8fff;
+  /* Neutrals: charcoal text on warm off-white. */
+  --color-ink: #26232b;
+  --color-ink-soft: #4d4953;
+  --color-muted: #8a8590;
+  --color-line: #ece8e5;
+  --color-cream: #faf8f7;
+  --color-sand: #f3f0ed;
+
+  /* Primary: a single rose pink with tints. */
+  --color-rose-50: #fdf3f6;
+  --color-rose-100: #fbe4eb;
+  --color-rose-200: #f5c8d6;
+  --color-rose-300: #ec9fb7;
+  --color-rose-500: #df5f86;
+  --color-rose-600: #d14672;
+  --color-rose-700: #b0365d;
+
+  /* Semantic colors, used sparingly for status. */
+  --color-success: #2f8a58;
+  --color-success-50: #eef7f2;
+  --color-success-100: #d7eee1;
+  --color-warning: #a86a12;
+  --color-warning-50: #fdf6e8;
+  --color-warning-100: #f8e7c4;
+  --color-danger: #c23b3b;
+  --color-danger-50: #fdf1f1;
+  --color-danger-100: #f7dada;
   --color-gcash: #0a5bff;
 
-  --font-display: var(--font-bricolage), ui-sans-serif, system-ui;
+  --font-display: var(--font-jakarta), ui-sans-serif, system-ui;
   --font-sans: var(--font-jakarta), ui-sans-serif, system-ui;
 
-  --shadow-pop: 3px 3px 0 0 var(--color-ink);
-  --shadow-pop-sm: 2px 2px 0 0 var(--color-ink);
-  --shadow-pop-lg: 5px 5px 0 0 var(--color-ink);
+  --shadow-card: 0 1px 2px rgb(38 35 43 / 0.04), 0 4px 14px rgb(38 35 43 / 0.05);
+  --shadow-raised: 0 2px 4px rgb(38 35 43 / 0.04), 0 12px 32px rgb(38 35 43 / 0.08);
 
-  --animate-pop-in: pop-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
-  --animate-rise: rise 0.4s ease-out both;
-  --animate-wiggle: wiggle 0.6s ease-in-out;
+  --animate-pop-in: pop-in 0.25s ease-out both;
+  --animate-rise: rise 0.3s ease-out both;
 
   @keyframes pop-in {
     from {
       opacity: 0;
-      transform: scale(0.92) translateY(6px);
+      transform: scale(0.98);
     }
     to {
       opacity: 1;
@@ -47,44 +52,28 @@
   @keyframes rise {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(6px);
     }
     to {
       opacity: 1;
       transform: none;
     }
   }
-  @keyframes wiggle {
-    0%,
-    100% {
-      transform: rotate(0);
-    }
-    25% {
-      transform: rotate(-8deg) scale(1.15);
-    }
-    75% {
-      transform: rotate(8deg) scale(1.15);
-    }
-  }
 }
 
-/* Sticker-style surfaces: ink outline plus an offset shadow. */
-@utility pop {
-  border: 2px solid var(--color-ink);
-  box-shadow: var(--shadow-pop);
+/* Card surface: white with a hairline and a soft shadow. */
+@utility card {
   background-color: white;
-}
-@utility pop-sm {
-  border: 2px solid var(--color-ink);
-  box-shadow: var(--shadow-pop-sm);
+  border: 1px solid color-mix(in srgb, var(--color-line) 70%, transparent);
+  box-shadow: var(--shadow-card);
 }
 @utility press {
   transition:
-    transform 0.08s ease,
-    box-shadow 0.08s ease;
+    transform 0.12s ease,
+    background-color 0.15s ease,
+    box-shadow 0.15s ease;
   &:active {
-    transform: translate(2px, 2px);
-    box-shadow: 0 0 0 0 var(--color-ink);
+    transform: scale(0.98);
   }
 }
 @utility no-scrollbar {
@@ -92,14 +81,6 @@
   &::-webkit-scrollbar {
     display: none;
   }
-}
-@utility confetti-bg {
-  background-color: var(--color-cream);
-  background-image:
-    radial-gradient(circle at 12px 12px, color-mix(in srgb, var(--color-mango) 55%, transparent) 2.5px, transparent 3px),
-    radial-gradient(circle at 36px 30px, color-mix(in srgb, var(--color-sunset) 35%, transparent) 2px, transparent 2.5px),
-    radial-gradient(circle at 24px 44px, color-mix(in srgb, var(--color-ube) 30%, transparent) 2px, transparent 2.5px);
-  background-size: 48px 52px;
 }
 
 :root {
@@ -126,11 +107,11 @@ h2,
 h3,
 .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
 
 :focus-visible {
-  outline: 3px solid var(--color-ube);
+  outline: 2px solid var(--color-rose-500);
   outline-offset: 2px;
   border-radius: 8px;
 }

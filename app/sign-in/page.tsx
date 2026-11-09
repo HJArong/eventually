@@ -22,12 +22,12 @@ export default async function SignIn({ searchParams }: PageProps<"/sign-in">) {
 
   return (
     <main className="flex min-h-dvh flex-col px-5 pt-6 pb-10">
-      <Logo size={30} />
-      <h1 className="mt-10 text-[34px] leading-tight font-extrabold">Hello! Let’s get you in.</h1>
-      <p className="mt-2 text-sm text-ink-soft">New here? Signing in creates your account.</p>
+      <Logo size={28} />
+      <h1 className="mt-10 text-[28px] leading-tight font-semibold">Welcome to Eventually</h1>
+      <p className="mt-2 text-sm text-muted">Sign in or create an account. It takes a few seconds.</p>
 
       {typeof error === "string" && ERRORS[error] && (
-        <p role="alert" className="mt-4 rounded-2xl border-2 border-sunset bg-sunset-50 px-4 py-3 text-sm font-semibold text-sunset">
+        <p role="alert" className="mt-4 rounded-xl bg-danger-50 px-4 py-3 text-sm font-medium text-danger">
           {ERRORS[error]}
         </p>
       )}
@@ -41,34 +41,34 @@ export default async function SignIn({ searchParams }: PageProps<"/sign-in">) {
         )}
       </form>
 
-      <div className="my-6 flex items-center gap-3 text-xs font-bold text-muted uppercase">
-        <span className="h-0.5 flex-1 bg-ink/10" /> or email <span className="h-0.5 flex-1 bg-ink/10" />
+      <div className="my-6 flex items-center gap-3 text-xs text-muted">
+        <span className="h-px flex-1 bg-line" /> or email <span className="h-px flex-1 bg-line" />
       </div>
 
       <MagicLinkForm local={!supabaseAuthEnabled} />
 
       {config.demoMode && (
-        <section id="demo" className="mt-10 rounded-3xl border-2 border-dashed border-ink/25 bg-white/70 p-4">
-          <h2 className="text-lg font-extrabold">One-click demo</h2>
-          <p className="mb-4 text-sm text-muted">Jump into a pre-filled account. Data resets anytime.</p>
-          <div className="grid gap-3">
+        <section id="demo" className="card mt-10 rounded-2xl p-5">
+          <h2 className="text-base font-semibold">One-click demo</h2>
+          <p className="mt-0.5 mb-4 text-sm text-muted">Explore with a pre-filled account. You can reset the data anytime.</p>
+          <div className="grid gap-2.5">
             <form action={demoSignIn}>
               <input type="hidden" name="who" value="planner" />
-              <SubmitButton variant="mango" size="lg" className="h-auto w-full justify-start py-3 text-left">
-                <CalendarHeart className="size-6 shrink-0" />
+              <SubmitButton variant="soft" size="lg" className="h-auto w-full justify-start py-3 text-left">
+                <CalendarHeart className="size-5 shrink-0" strokeWidth={1.8} />
                 <span>
                   <span className="block">Sign in as demo planner</span>
-                  <span className="block text-xs font-medium">Bea · planning Sofia’s 18th debut</span>
+                  <span className="block text-xs font-normal text-rose-700/80">Hazel · planning her wedding</span>
                 </span>
               </SubmitButton>
             </form>
             <form action={demoSignIn}>
               <input type="hidden" name="who" value="vendor" />
               <SubmitButton variant="outline" size="lg" className="h-auto w-full justify-start py-3 text-left">
-                <Store className="size-6 shrink-0" />
+                <Store className="size-5 shrink-0 text-ink-soft" strokeWidth={1.8} />
                 <span>
                   <span className="block">Sign in as demo vendor</span>
-                  <span className="block text-xs font-medium text-muted">Inday · runs Lechon ni Inday</span>
+                  <span className="block text-xs font-normal text-muted">Inday · runs Lechon ni Inday</span>
                 </span>
               </SubmitButton>
             </form>

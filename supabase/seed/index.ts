@@ -51,11 +51,11 @@ async function insertChunked<T extends Record<string, unknown>>(
   }
 }
 
-/** Next Mar 14 that is at least `minDays` away, so the demo event is always in the future. */
+/** Next May 13 that is at least `minDays` away, so the demo wedding is always in the future. */
 function heroEventDate(today: string, minDays = 60): string {
   let year = Number(today.slice(0, 4));
   for (;;) {
-    const candidate = `${year}-03-14`;
+    const candidate = `${year}-05-13`;
     if (candidate >= addDays(today, minDays)) return candidate;
     year += 1;
   }
@@ -102,7 +102,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
 
   // Demo people
   const people = {
-    bea: { id: randomUUID(), name: "Bea Villaruel", email: DEMO_PLANNER_EMAIL, role: "planner" as const },
+    hazel: { id: randomUUID(), name: "Hazel", email: DEMO_PLANNER_EMAIL, role: "planner" as const },
     inday: { id: randomUUID(), name: "Inday Cabahug", email: DEMO_VENDOR_EMAIL, role: "vendor" as const },
     curator: { id: randomUUID(), name: "Eventually Curators", email: DEMO_ADMIN_EMAIL, role: "admin" as const },
     paolo: { id: randomUUID(), name: "Paolo Ybañez", email: "paolo@demo.eventually.app", role: "planner" as const },
@@ -298,22 +298,22 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
     }
   });
 
-  // The hero post on home and in the feed: a stylist's debut backdrop, posted 2 hours ago.
+  // The hero post on home and in the feed: a stylist's wedding reception, posted 2 hours ago.
   const bulak = V("Bulak Florals Cebu");
   const heroPostId = randomUUID();
   postRows.push({
     id: heroPostId,
     vendorId: bulak.id,
-    caption: "18 roses backdrop for Andrea's debut in Cebu City. Flower wall, pastel garland and our light-up 18.",
+    caption: "Ivory and greenery reception for Joy & Marco in Cebu City. Eucalyptus runners, white blooms and candlelight.",
     areaId: areaId["cebu-city"],
-    linkedServiceId: bulak.services[0]!.id,
+    linkedServiceId: bulak.services[3]!.id,
     seedLikes: 236,
     createdAt: hoursAgo(2),
   });
-  postTagRows.push({ postId: heroPostId, eventType: "debut" });
+  postTagRows.push({ postId: heroPostId, eventType: "wedding" });
   mediaRows.push(
-    { ownerType: "post", ownerId: heroPostId, url: "/seed/styling-debut.webp", width: 1200, height: 900, sort: 0 },
-    { ownerType: "post", ownerId: heroPostId, url: "/seed/styling-roses.webp", width: 1200, height: 900, sort: 1 },
+    { ownerType: "post", ownerId: heroPostId, url: "/seed/styling-wedding.webp", width: 1200, height: 900, sort: 0 },
+    { ownerType: "post", ownerId: heroPostId, url: "/seed/venue-garden.webp", width: 1200, height: 900, sort: 1 },
   );
 
   await insertChunked(db, t.posts, postRows);
@@ -527,43 +527,43 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
     return { requestId, threadId, quoteId };
   }
 
-  // Bea, the demo planner: a lived-in debut with 2 quotes waiting.
-  const sofia = await createEvent({
-    plannerId: people.bea.id,
-    title: "Sofia's 18th Debut",
-    eventType: "debut",
+  // Hazel, the demo planner: her own wedding, with 2 quotes waiting.
+  const wedding = await createEvent({
+    plannerId: people.hazel.id,
+    title: "Hazel's Wedding",
+    eventType: "wedding",
     date: heroDate,
     area: "cebu-city",
     venueText: "Lahug, Cebu City",
-    pax: 120,
-    budgetPhp: 150_000,
+    pax: 150,
+    budgetPhp: 475_000,
     doneTasks: 4,
   });
   await conversation({
-    event: sofia,
+    event: wedding,
     vendor: V("Kaha Studios"),
-    services: [{ index: 0 }, { index: 2 }],
-    notes: "Hi! Photo coverage for Sofia's debut plus a pre-debut shoot at Sirao flower farm if possible.",
+    services: [{ index: 1 }, { index: 2 }],
+    notes: "Hi! Photo and video with a same-day edit for our wedding, plus a prenup shoot at Sirao flower farm if possible.",
     requestedAt: hoursAgo(50),
     status: "quoted",
-    budgetPhp: 30_000,
-    quote: { at: hoursAgo(30), message: "Hi Bea! Sirao is perfect for golden hour. Here's our package po." },
+    budgetPhp: 60_000,
+    quote: { at: hoursAgo(30), message: "Hi Hazel! Congratulations! Sirao is perfect for golden hour. Here's our package po." },
     readByPlanner: false,
   });
   await conversation({
-    event: sofia,
+    event: wedding,
     vendor: bulak,
-    services: [{ index: 0 }, { index: 2 }],
-    notes: "Pastel lilac theme, with the 18 roses set. Can you do a flower wall?",
+    services: [{ index: 3 }, { index: 4 }],
+    notes: "Sage green and ivory motif for the church and reception. Can you do a floral arch at the altar?",
     requestedAt: hoursAgo(28),
     status: "quoted",
-    budgetPhp: 25_000,
-    chatter: [{ at: hoursAgo(27), role: "vendor", text: "Yes po! We have lilac and blush roses in stock for that week." }],
-    quote: { at: hoursAgo(5), message: "Here's the quote for the lilac backdrop and 18 roses set." },
+    budgetPhp: 70_000,
+    chatter: [{ at: hoursAgo(27), role: "vendor", text: "Yes po! We can do an altar arch with eucalyptus and white roses that week." }],
+    quote: { at: hoursAgo(5), message: "Here's the quote for the church and reception styling, plus the bouquet and entourage flowers." },
     readByPlanner: false,
   });
   for (const name of ["Bulak Florals Cebu", "Kusina Sugbo Catering", "Host Migs"]) {
-    await db.insert(t.follows).values({ profileId: people.bea.id, vendorId: V(name).id });
+    await db.insert(t.follows).values({ profileId: people.hazel.id, vendorId: V(name).id });
   }
 
   // Inday, the demo vendor: requests waiting, a quote out, a confirmed booking.

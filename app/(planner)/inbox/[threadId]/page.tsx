@@ -25,7 +25,7 @@ export default async function PlannerThread({ params, searchParams }: PageProps<
   return (
     <>
       <LiveRefresh intervalMs={3000} />
-      {booked && <Celebrate title="You're booked!" body={`${view.vendor.name} is locked in for ${view.event.title}.`} />}
+      {booked && <Celebrate title="Booking confirmed" body={`${view.vendor.name} is locked in for ${view.event.title}.`} />}
       <Thread view={view} catalog={await getCatalog()} basePath="/inbox" />
     </>
   );

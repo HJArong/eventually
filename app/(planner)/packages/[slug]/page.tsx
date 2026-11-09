@@ -33,17 +33,17 @@ export default async function PackageDetail({ params }: PageProps<"/packages/[sl
     <main>
       <AppHeader title={pkg.title} back="/packages" />
       <div className="px-5 pt-4">
-        <div className="pop relative h-48 overflow-hidden rounded-3xl">
+        <div className="card relative h-48 overflow-hidden rounded-2xl">
           {pkg.coverUrl && <Image src={pkg.coverUrl} alt="" fill priority sizes="440px" className="object-cover" />}
-          <span className="absolute top-3 left-3 -rotate-2 rounded-full border-2 border-ink bg-mango px-2.5 py-0.5 text-xs font-extrabold">
+          <span className="absolute top-3 left-3 rounded-full bg-white/95 px-2.5 py-0.5 text-xs font-semibold text-rose-700 shadow-card">
             Curated by Eventually
           </span>
         </div>
-        <h2 className="mt-4 text-2xl leading-tight font-extrabold">
-          {pkg.title} · {area}
+        <h2 className="mt-4 text-2xl leading-tight font-semibold">
+          {pkg.title}
         </h2>
         <p className="mt-1 text-sm text-muted">
-          {catalog.eventTypeBySlug.get(pkg.eventType)?.name} · {pkg.paxMin}–{pkg.paxMax} pax
+          {catalog.eventTypeBySlug.get(pkg.eventType)?.name} · {area} · {pkg.paxMin}–{pkg.paxMax} pax
         </p>
         <p className="mt-2 text-sm text-ink-soft">{pkg.description}</p>
       </div>

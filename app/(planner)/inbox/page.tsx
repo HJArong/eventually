@@ -32,7 +32,7 @@ export default async function Inbox({ searchParams }: PageProps<"/inbox">) {
         </ChipLink>
       </div>
       {sent && (
-        <p className="mx-5 mt-4 animate-pop-in rounded-2xl border-2 border-ink bg-calamansi-100 px-4 py-3 text-sm font-semibold">
+        <p className="mx-5 mt-4 animate-pop-in rounded-xl border border-line bg-success-100 px-4 py-3 text-sm font-semibold">
           Sent {sent === "1" ? "your request" : `${sent} requests`}! Vendors usually reply with a quote right here.
         </p>
       )}

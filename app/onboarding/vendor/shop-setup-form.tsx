@@ -54,7 +54,7 @@ export function ShopSetupForm({ categories, areas, samples }: { categories: Opti
         <PhotoPicker samples={samples} min={3} />
       </div>
       {state.error && (
-        <p role="alert" className="text-sm font-semibold text-sunset">
+        <p role="alert" className="text-sm font-semibold text-danger">
           {state.error}
         </p>
       )}

@@ -33,14 +33,14 @@ export function InboxList({ items, side, basePath }: { items: InboxItem[]; side:
             <Link
               href={`${basePath}/${item.id}`}
               className={cn(
-                "flex items-center gap-3 rounded-3xl border-2 bg-white p-3 press",
-                item.unread ? "border-ink shadow-pop-sm" : "border-ink/10",
+                "flex items-center gap-3 rounded-2xl border bg-white p-3 press",
+                item.unread ? "border-rose-200 shadow-card" : "border-line",
               )}
             >
               <Avatar name={name} size={46} />
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <p className={cn("truncate font-display text-[16px]", item.unread ? "font-extrabold" : "font-bold")}>{name}</p>
+                  <p className={cn("truncate font-display text-[16px]", item.unread ? "font-semibold" : "font-semibold")}>{name}</p>
                   <span className="ml-auto shrink-0 text-[11px] text-muted">{timeAgo(item.lastMessageAt)}</span>
                 </div>
                 <p className="truncate text-xs text-muted">{item.event.title}</p>
@@ -49,7 +49,7 @@ export function InboxList({ items, side, basePath }: { items: InboxItem[]; side:
               <div className="flex shrink-0 flex-col items-end gap-1.5">
                 {item.status && <StatusPill status={item.status} />}
                 {item.unread > 0 && (
-                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-sunset px-1.5 text-[11px] font-extrabold text-white">
+                  <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-600 px-1.5 text-[11px] font-semibold text-white">
                     {item.unread}
                   </span>
                 )}

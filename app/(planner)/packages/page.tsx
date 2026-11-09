@@ -27,7 +27,7 @@ export default async function Packages({ searchParams }: PageProps<"/packages">)
           .map((e) => (
             <ChipLink key={e.slug} href={`/packages?type=${e.slug}`} selected={selected === e.slug}>
               {e.name}
-              {e.slug === event.eventType && <span className="size-1.5 rounded-full bg-sunset" aria-label="your event type" />}
+              {e.slug === event.eventType && <span className="size-1.5 rounded-full bg-rose-500" aria-label="your event type" />}
             </ChipLink>
           ))}
       </div>

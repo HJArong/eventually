@@ -11,9 +11,9 @@ export function MagicLinkForm({ local }: { local: boolean }) {
 
   if (state.status === "sent") {
     return (
-      <div className="animate-pop-in rounded-3xl border-2 border-ink bg-calamansi-50 p-4">
-        <p className="flex items-center gap-2 font-bold">
-          <MailCheck className="size-5 text-calamansi" /> {state.message}
+      <div className="animate-pop-in card rounded-2xl p-4">
+        <p className="flex items-center gap-2 font-semibold">
+          <MailCheck className="size-5 text-success" /> {state.message}
         </p>
         {state.devLink ? (
           <>
@@ -38,7 +38,7 @@ export function MagicLinkForm({ local }: { local: boolean }) {
       </label>
       <Input id="email" name="email" type="email" required autoComplete="email" placeholder="you@email.com" />
       {state.status === "error" && (
-        <p role="alert" className="text-sm font-semibold text-sunset">
+        <p role="alert" className="text-sm font-semibold text-danger">
           {state.message}
         </p>
       )}

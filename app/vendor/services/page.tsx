@@ -17,9 +17,9 @@ export default async function VendorServices({ searchParams }: PageProps<"/vendo
     <main>
       <AppHeader title="Services & prices" subtitle="Planners see these on your shop and in requests" back="/vendor" />
       {onboarding && (
-        <div className="mx-5 mt-4 animate-pop-in rounded-3xl border-2 border-ink bg-mango-100 p-4">
-          <p className="font-display text-lg font-extrabold">Your shop is live! 🎉</p>
-          <p className="text-sm text-ink-soft">Add at least one service with a price so planners can request you.</p>
+        <div className="mx-5 mt-4 animate-pop-in rounded-2xl bg-rose-50 p-4 text-rose-700">
+          <p className="text-base font-semibold">Your shop is live</p>
+          <p className="text-sm text-rose-700/80">Add at least one service with a price so planners can request you.</p>
         </div>
       )}
       <div className="grid gap-3 px-5 pt-4">

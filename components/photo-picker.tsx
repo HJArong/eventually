@@ -13,7 +13,7 @@ export function PhotoPicker({ samples, min = 1, max = 8 }: { samples: string[]; 
 
   return (
     <div>
-      <label className="flex h-28 cursor-pointer flex-col items-center justify-center gap-1 rounded-3xl border-2 border-dashed border-ink/30 bg-white text-sm font-bold text-ink-soft hover:border-ink">
+      <label className="flex h-28 cursor-pointer flex-col items-center justify-center gap-1 rounded-2xl border border-dashed border-line bg-white text-sm font-medium text-ink-soft hover:border-rose-300">
         <ImagePlus className="size-6" />
         Add photos (up to {max})
         <input
@@ -29,16 +29,16 @@ export function PhotoPicker({ samples, min = 1, max = 8 }: { samples: string[]; 
         <div className="mt-2 flex gap-2 overflow-x-auto">
           {uploads.map((u) => (
             // eslint-disable-next-line @next/next/no-img-element
-            <img key={u} src={u} alt="" className="size-16 shrink-0 rounded-xl border-2 border-ink object-cover" />
+            <img key={u} src={u} alt="" className="size-16 shrink-0 rounded-xl border border-line object-cover" />
           ))}
         </div>
       )}
-      <p className="mt-3 mb-2 text-xs font-bold text-muted">Or use sample photos (demo):</p>
+      <p className="mt-3 mb-2 text-xs font-semibold text-muted">Or use sample photos (demo):</p>
       <div className="grid grid-cols-4 gap-2">
         {samples.map((src) => {
           const on = picked.includes(src);
           return (
-            <label key={src} className="relative aspect-square cursor-pointer overflow-hidden rounded-xl border-2 border-ink">
+            <label key={src} className="relative aspect-square cursor-pointer overflow-hidden rounded-xl bg-sand">
               <input
                 type="checkbox"
                 name="samplePhotos"
@@ -50,8 +50,8 @@ export function PhotoPicker({ samples, min = 1, max = 8 }: { samples: string[]; 
               <Image src={src} alt="Sample photo" fill sizes="100px" className="object-cover" />
               <span
                 className={cn(
-                  "absolute inset-0 flex items-center justify-center transition peer-focus-visible:ring-4 peer-focus-visible:ring-ube",
-                  on ? "bg-ube/50" : "bg-transparent",
+                  "absolute inset-0 flex items-center justify-center transition peer-focus-visible:ring-4 peer-focus-visible:ring-rose-600",
+                  on ? "bg-rose-600/50" : "bg-transparent",
                 )}
               >
                 {on && <Check className="size-6 text-white" strokeWidth={3} />}
@@ -60,7 +60,7 @@ export function PhotoPicker({ samples, min = 1, max = 8 }: { samples: string[]; 
           );
         })}
       </div>
-      <p className={cn("mt-2 text-xs font-semibold", total >= min ? "text-calamansi" : "text-muted")}>
+      <p className={cn("mt-2 text-xs font-semibold", total >= min ? "text-success" : "text-muted")}>
         {total} selected{min > 1 ? ` · at least ${min}` : ""}
       </p>
     </div>

@@ -22,7 +22,7 @@ export function eventTitle(eventTypeSlug: string, celebrant: string): string {
     case "debut":
       return name ? `${possessive} 18th Debut` : "My Debut";
     case "wedding":
-      return name ? `${name} Wedding` : "Our Wedding";
+      return name ? `${possessive} Wedding` : "Our Wedding";
     case "christening":
       return name ? `${possessive} Christening` : "Christening";
     case "kids_party":

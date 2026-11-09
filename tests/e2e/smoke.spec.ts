@@ -6,6 +6,7 @@ const PLANNER_PAGES = [
   "/search?q=lechon",
   "/packages",
   "/packages/debut-starter",
+  "/packages/cebu-city-wedding-essentials",
   "/vendors/lechon-ni-inday",
   "/request/lechon-ni-inday",
   "/feed",

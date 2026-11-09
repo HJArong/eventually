@@ -27,17 +27,17 @@ export function ServiceEditor({ service }: { service?: Service }) {
         <button
           type="button"
           onClick={() => setEditing(true)}
-          className="flex items-center justify-center gap-2 rounded-3xl border-2 border-dashed border-ink/30 bg-white/60 p-4 font-bold text-ube"
+          className="flex items-center justify-center gap-2 rounded-2xl border border-dashed border-line bg-white/60 p-4 font-semibold text-rose-600"
         >
           <Plus className="size-5" /> Add a service
         </button>
       );
     return (
-      <div className="flex items-center gap-3 rounded-3xl border-2 border-ink bg-white p-4 shadow-pop-sm">
+      <div className="flex items-center gap-3 rounded-2xl border border-line bg-white p-4 shadow-card">
         <div className="min-w-0 flex-1">
-          <p className="font-display font-extrabold">{service.name}</p>
+          <p className="font-display font-semibold">{service.name}</p>
           {service.description && <p className="truncate text-xs text-muted">{service.description}</p>}
-          <p className="mt-0.5 text-sm font-bold">
+          <p className="mt-0.5 text-sm font-semibold">
             {formatPeso(service.pricePhp)} <span className="font-medium text-muted">{UNIT_LABEL[service.unit]}</span>
           </p>
         </div>
@@ -46,7 +46,7 @@ export function ServiceEditor({ service }: { service?: Service }) {
         </button>
         <form action={deleteServiceAction}>
           <input type="hidden" name="id" value={service.id} />
-          <button type="submit" aria-label={`Delete ${service.name}`} className="flex size-9 items-center justify-center rounded-full text-muted hover:text-sunset">
+          <button type="submit" aria-label={`Delete ${service.name}`} className="flex size-9 items-center justify-center rounded-full text-muted hover:text-danger">
             <Trash2 className="size-4" />
           </button>
         </form>
@@ -55,7 +55,7 @@ export function ServiceEditor({ service }: { service?: Service }) {
   }
 
   return (
-    <form action={action} className="grid gap-3 rounded-3xl border-2 border-ink bg-white p-4 shadow-pop">
+    <form action={action} className="grid gap-3 rounded-2xl border border-line bg-white p-4 shadow-card">
       <input type="hidden" name="id" value={service?.id ?? ""} />
       <div>
         <Label htmlFor={`name-${service?.id ?? "new"}`}>Service name</Label>
@@ -82,7 +82,7 @@ export function ServiceEditor({ service }: { service?: Service }) {
         </div>
       </div>
       {state.error && (
-        <p role="alert" className="text-sm font-semibold text-sunset">
+        <p role="alert" className="text-sm font-semibold text-danger">
           {state.error}
         </p>
       )}

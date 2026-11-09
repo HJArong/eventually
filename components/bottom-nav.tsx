@@ -42,7 +42,7 @@ export function BottomNav({ side, unread }: { side: "planner" | "vendor"; unread
   return (
     <nav
       aria-label="Main"
-      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-[440px] border-t-2 border-ink bg-white pb-[env(safe-area-inset-bottom)]"
+      className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-[440px] border-t border-line/80 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur"
     >
       <ul className="grid grid-cols-5">
         {items.map((item) => {
@@ -52,23 +52,18 @@ export function BottomNav({ side, unread }: { side: "planner" | "vendor"; unread
             <li key={item.href}>
               <Link
                 href={item.href}
-                className="flex flex-col items-center gap-0.5 pt-2 pb-2.5 text-[11px] font-bold"
+                className="flex flex-col items-center gap-1 pt-2.5 pb-2.5 text-[11px] font-medium"
                 aria-current={active ? "page" : undefined}
               >
-                <span
-                  className={cn(
-                    "relative flex h-8 w-12 items-center justify-center rounded-full transition-colors",
-                    active ? "border-2 border-ink bg-mango" : "border-2 border-transparent",
-                  )}
-                >
-                  <Icon className="size-5" strokeWidth={active ? 2.5 : 2} aria-hidden />
+                <span className="relative flex h-7 w-12 items-center justify-center">
+                  <Icon className={cn("size-[22px]", active ? "text-rose-600" : "text-muted")} strokeWidth={active ? 2.2 : 1.8} aria-hidden />
                   {item.badge ? (
-                    <span className="absolute -top-1.5 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-sunset px-1 text-[10px] leading-none font-extrabold text-white">
+                    <span className="absolute -top-1 right-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-rose-600 px-1 text-[10px] leading-none font-semibold text-white ring-2 ring-white">
                       {item.badge > 9 ? "9+" : item.badge}
                     </span>
                   ) : null}
                 </span>
-                <span className={active ? "text-ink" : "text-muted"}>{item.label}</span>
+                <span className={active ? "text-rose-700" : "text-muted"}>{item.label}</span>
               </Link>
             </li>
           );

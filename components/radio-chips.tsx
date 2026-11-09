@@ -29,7 +29,7 @@ export function RadioChips({
             required={required && type === "radio"}
             className="peer sr-only"
           />
-          <span className="inline-flex h-9 items-center rounded-full border-2 border-ink/15 bg-white px-3.5 text-sm font-semibold transition-colors peer-checked:border-ink peer-checked:bg-ink peer-checked:text-white peer-focus-visible:outline-3 peer-focus-visible:outline-ube">
+          <span className="inline-flex h-9 items-center rounded-full border border-line bg-white px-3.5 text-sm font-medium text-ink-soft transition-colors peer-checked:border-rose-200 peer-checked:bg-rose-50 peer-checked:text-rose-700 peer-focus-visible:outline-2 peer-focus-visible:outline-rose-500">
             {o.label}
           </span>
         </label>

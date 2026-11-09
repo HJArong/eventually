@@ -49,12 +49,12 @@ export function PostCard({ post, interactive = true, tagNames }: { post: PostCar
   const likeCount = post.likeCount + (liked === post.liked ? 0 : liked ? 1 : -1);
 
   return (
-    <article id={`post-${post.id}`} className="pop scroll-mt-20 overflow-hidden rounded-3xl">
+    <article id={`post-${post.id}`} className="card scroll-mt-20 overflow-hidden rounded-2xl">
       <header className="flex items-center gap-3 p-3">
         <Link href={`/vendors/${post.vendor.slug}`} className="flex min-w-0 flex-1 items-center gap-3">
           <Avatar name={post.vendor.name} size={40} />
           <span className="min-w-0">
-            <span className="block truncate font-display font-extrabold">{post.vendor.name}</span>
+            <span className="block truncate font-display font-semibold">{post.vendor.name}</span>
             <span className="block truncate text-xs text-muted">
               {post.categoryName}
               {post.areaName && (
@@ -92,7 +92,7 @@ export function PostCard({ post, interactive = true, tagNames }: { post: PostCar
         )}
         {burst && (
           <Heart
-            className="pointer-events-none absolute top-1/2 left-1/2 size-20 -translate-1/2 animate-pop-in fill-sunset text-ink"
+            className="pointer-events-none absolute top-1/2 left-1/2 size-20 -translate-1/2 animate-pop-in fill-white text-white drop-shadow"
             onAnimationEnd={() => setTimeout(() => setBurst(false), 300)}
             aria-hidden
           />
@@ -102,18 +102,18 @@ export function PostCard({ post, interactive = true, tagNames }: { post: PostCar
       <div className="p-3">
         {interactive && (
           <div className="flex items-center gap-1">
-            <button type="button" onClick={like} aria-pressed={liked} aria-label={liked ? "Unlike" : "Like"} className="flex items-center gap-1.5 rounded-full px-2 py-1 font-bold">
-              <Heart className={cn("size-6", liked && "animate-wiggle fill-sunset text-sunset")} strokeWidth={2.2} />
+            <button type="button" onClick={like} aria-pressed={liked} aria-label={liked ? "Unlike" : "Like"} className="flex items-center gap-1.5 rounded-full px-2 py-1 font-medium">
+              <Heart className={cn("size-6", liked && "fill-rose-600 text-rose-600")} strokeWidth={1.8} />
               <span className="text-sm tabular-nums">{likeCount}</span>
             </button>
-            <button type="button" onClick={save} aria-pressed={saved} aria-label={saved ? "Unsave" : "Save"} className="flex items-center gap-1.5 rounded-full px-2 py-1 text-sm font-bold">
-              <Bookmark className={cn("size-6", saved && "fill-ube text-ube")} strokeWidth={2.2} />
+            <button type="button" onClick={save} aria-pressed={saved} aria-label={saved ? "Unsave" : "Save"} className="flex items-center gap-1.5 rounded-full px-2 py-1 text-sm font-medium">
+              <Bookmark className={cn("size-6", saved && "fill-rose-600 text-rose-600")} strokeWidth={1.8} />
               {saved ? "Saved" : "Save"}
             </button>
             {post.linkedService && (
               <Link
                 href={`/request/${post.vendor.slug}?service=${post.linkedService.id}`}
-                className="ml-auto rounded-full border-2 border-ink bg-mango px-3 py-1.5 text-xs font-extrabold shadow-pop-sm press"
+                className="ml-auto rounded-full bg-rose-50 px-3.5 py-1.5 text-xs font-semibold text-rose-700 press"
               >
                 View service
               </Link>
@@ -123,13 +123,13 @@ export function PostCard({ post, interactive = true, tagNames }: { post: PostCar
         <p className="mt-1.5 text-sm text-ink-soft">{post.caption}</p>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {post.tags.map((t) => (
-            <span key={t} className="rounded-full bg-ube-50 px-2 py-0.5 text-[11px] font-bold text-ube-700">
+            <span key={t} className="rounded-full bg-sand px-2 py-0.5 text-[11px] font-medium text-ink-soft">
               #{(tagNames[t] ?? t).toLowerCase().replace(/\s+/g, "")}
             </span>
           ))}
         </div>
         {post.linkedService && (
-          <p className="mt-2 text-xs font-semibold text-muted">
+          <p className="mt-2 text-xs text-muted">
             {post.linkedService.name} · {formatPeso(post.linkedService.pricePhp)}
             {UNIT_LABEL[post.linkedService.unit]}
           </p>

@@ -1,8 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Bricolage_Grotesque, Plus_Jakarta_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-bricolage", weight: ["500", "700", "800"] });
 const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-jakarta" });
 
 export const metadata: Metadata = {
@@ -13,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#fff8ef",
+  themeColor: "#faf8f7",
   width: "device-width",
   initialScale: 1,
   viewportFit: "cover",
@@ -21,7 +20,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${jakarta.variable}`}>
+    <html lang="en" className={jakarta.variable}>
       <body>
         <div className="mx-auto min-h-dvh max-w-[440px] bg-cream shadow-[0_0_0_1px_var(--color-line)] sm:my-0">
           {children}

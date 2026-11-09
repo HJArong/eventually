@@ -38,7 +38,7 @@ export function QuoteComposer({
         <div>
           <Label>Line items</Label>
           <div className="grid gap-2">
-            <div className="grid grid-cols-[1fr_3.5rem_5.5rem_2rem] gap-2 px-1 text-[11px] font-bold text-muted uppercase">
+            <div className="grid grid-cols-[1fr_3.5rem_5.5rem_2rem] gap-2 px-1 text-xs font-medium text-muted">
               <span>Item</span>
               <span>Qty</span>
               <span>Unit ₱</span>
@@ -69,7 +69,7 @@ export function QuoteComposer({
                   type="button"
                   onClick={() => setItems((prev) => prev.filter((_, k) => k !== i))}
                   aria-label="Remove line"
-                  className="flex size-8 items-center justify-center text-muted hover:text-sunset"
+                  className="flex size-8 items-center justify-center text-muted hover:text-danger"
                 >
                   <Trash2 className="size-4" />
                 </button>
@@ -78,16 +78,16 @@ export function QuoteComposer({
             <button
               type="button"
               onClick={() => setItems((prev) => [...prev, { label: "", qty: 1, unitPricePhp: 0 }])}
-              className="inline-flex w-fit items-center gap-1 text-sm font-bold text-ube"
+              className="inline-flex w-fit items-center gap-1 text-sm font-semibold text-rose-600"
             >
               <Plus className="size-4" /> Add line
             </button>
           </div>
         </div>
 
-        <div className="flex items-center justify-between rounded-3xl border-2 border-ink bg-white p-4 shadow-pop-sm">
-          <span className="font-display text-lg font-extrabold">Total</span>
-          <span className="font-display text-2xl font-extrabold tabular-nums" aria-live="polite">
+        <div className="flex items-center justify-between rounded-2xl border border-line bg-white p-4 shadow-card">
+          <span className="font-display text-lg font-semibold">Total</span>
+          <span className="font-display text-2xl font-semibold tabular-nums" aria-live="polite">
             {formatPeso(totals.total)}
           </span>
         </div>
@@ -103,8 +103,8 @@ export function QuoteComposer({
                   onClick={() => setDeposit(d)}
                   aria-pressed={deposit === d}
                   className={cn(
-                    "h-10 flex-1 rounded-full border-2 text-sm font-extrabold",
-                    deposit === d ? "border-ink bg-ink text-white" : "border-ink/15 bg-white",
+                    "h-10 flex-1 rounded-full border text-sm font-semibold",
+                    deposit === d ? "border-rose-200 bg-rose-50 text-rose-700" : "border-line bg-white text-ink-soft",
                   )}
                 >
                   {d}%
@@ -125,7 +125,7 @@ export function QuoteComposer({
         </div>
 
         {state.error && (
-          <p role="alert" className="text-sm font-semibold text-sunset">
+          <p role="alert" className="text-sm font-semibold text-danger">
             {state.error}
           </p>
         )}

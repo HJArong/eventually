@@ -29,10 +29,10 @@ export default async function VendorShop() {
     <main>
       <AppHeader title="My shop" subtitle={viewer.email} />
       <div className="px-5 pt-4">
-        <div className="pop flex items-center gap-3 rounded-3xl p-4">
+        <div className="card flex items-center gap-3 rounded-2xl p-4">
           <Avatar name={vendor.name} src={vendor.coverUrl} size={52} />
           <div className="min-w-0 flex-1">
-            <p className="truncate font-display text-lg font-extrabold">{vendor.name}</p>
+            <p className="truncate font-display text-lg font-semibold">{vendor.name}</p>
             <p className="truncate text-sm text-muted">{viewer.displayName}</p>
           </div>
           <form action={signOut}>
@@ -62,7 +62,7 @@ export default async function VendorShop() {
                     <input type="hidden" name="date" value={b.date} />
                     <button
                       type="submit"
-                      className="inline-flex h-9 items-center gap-1.5 rounded-full border-2 border-ink bg-sand px-3 text-sm font-semibold"
+                      className="inline-flex h-9 items-center gap-1.5 rounded-full border border-line bg-sand px-3 text-sm font-semibold"
                       aria-label={`Unblock ${formatDate(b.date)}`}
                       title={b.reason ?? undefined}
                     >

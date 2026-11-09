@@ -47,11 +47,11 @@ export function ShopForm({
         <RadioChips name="areas" type="checkbox" options={areas} defaultValue={selectedAreas} />
       </div>
       {state.error && (
-        <p role="alert" className="text-sm font-semibold text-sunset">
+        <p role="alert" className="text-sm font-semibold text-danger">
           {state.error}
         </p>
       )}
-      {state.ok && <p className="text-sm font-semibold text-calamansi">Saved.</p>}
+      {state.ok && <p className="text-sm font-semibold text-success">Saved.</p>}
       <SubmitButton pendingText="Saving…">Save shop</SubmitButton>
     </form>
   );

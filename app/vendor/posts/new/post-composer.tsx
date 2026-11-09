@@ -59,7 +59,7 @@ export function PostComposer({
         </Select>
       </div>
       {state.error && (
-        <p role="alert" className="text-sm font-semibold text-sunset">
+        <p role="alert" className="text-sm font-semibold text-danger">
           {state.error}
         </p>
       )}

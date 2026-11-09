@@ -35,7 +35,7 @@ export default async function VendorFeed({ searchParams }: PageProps<"/vendor/fe
         </ChipLink>
       </div>
       {posted && (
-        <p className="mx-5 mt-4 animate-pop-in rounded-2xl border-2 border-ink bg-calamansi-100 px-4 py-3 text-sm font-semibold">
+        <p className="mx-5 mt-4 animate-pop-in rounded-xl bg-success-50 px-4 py-3 text-sm font-medium text-success">
           Published! Planners will see it in their feed.
         </p>
       )}

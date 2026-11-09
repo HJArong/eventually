@@ -39,7 +39,7 @@ describe("buildAutoQuote", () => {
   const base = {
     fallbackService: { name: "Whole lechon (regular)", pricePhp: 8_500, unit: "per_item" as const },
     categorySlug: "lechon",
-    plannerName: "Bea Santos",
+    plannerName: "Hazel",
     eventDateIso: "2027-03-14",
     todayIso: "2026-11-09",
     pax: 120,
@@ -59,7 +59,7 @@ describe("buildAutoQuote", () => {
     expect(q.items[2]).toEqual({ label: "Delivery – Cebu City", qty: 1, unitPricePhp: 0 });
     expect(q.depositPct).toBe(30);
     expect(q.validUntil).toBe("2026-11-23");
-    expect(q.greeting).toContain("Bea");
+    expect(q.greeting).toContain("Hazel");
   });
 
   it("falls back to the first service and never expires after the event", () => {
@@ -90,6 +90,7 @@ describe("checklist", () => {
     expect(eventTitle("debut", "Sofia")).toBe("Sofia's 18th Debut");
     expect(eventTitle("christening", "Lucas")).toBe("Lucas' Christening");
     expect(eventTitle("wedding", "")).toBe("Our Wedding");
+    expect(eventTitle("wedding", "Hazel")).toBe("Hazel's Wedding");
   });
 });
 

@@ -62,7 +62,7 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
             name="q"
             defaultValue={sp.q}
             placeholder="Lechon, venues, hosts…"
-            className="h-12 w-full rounded-2xl border-2 border-ink bg-white pr-4 pl-12 font-medium shadow-pop-sm focus:outline-none"
+            className="h-12 w-full rounded-xl border border-line bg-white pr-4 pl-12 font-medium shadow-card focus:outline-none"
           />
         </form>
 
@@ -106,7 +106,7 @@ export default async function SearchPage({ searchParams }: PageProps<"/search">)
             {date ? ` free on ${formatDate(date)}` : ""} · {areaName}
           </p>
           {(sp.q || sp.category || sp.band || sp.rating || sp.area || sp.date) && (
-            <a href="/search" className="inline-flex items-center gap-1 font-bold text-ube">
+            <a href="/search" className="inline-flex items-center gap-1 font-semibold text-rose-600">
               <X className="size-4" /> Clear
             </a>
           )}

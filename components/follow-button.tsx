@@ -19,8 +19,8 @@ export function FollowButton({ vendorId, following, className }: { vendorId: str
       }
       aria-pressed={optimistic}
       className={cn(
-        "inline-flex h-8 items-center gap-1 rounded-full border-2 border-ink px-3 text-xs font-extrabold press",
-        optimistic ? "bg-ink text-white" : "bg-white shadow-pop-sm",
+        "inline-flex h-8 items-center gap-1 rounded-full border border-line px-3 text-xs font-semibold press",
+        optimistic ? "bg-sand text-ink-soft" : "bg-rose-50 text-rose-700",
         className,
       )}
     >

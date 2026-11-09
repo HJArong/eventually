@@ -20,7 +20,7 @@ Open http://localhost:3000 (use your browser's phone emulation, or a phone on th
 
 On the sign-in page, use **One-click demo**:
 
-- **Sign in as demo planner**: Bea, planning *Sofia's 18th Debut* (Mar 14, Cebu City, 120 pax, ₱150k budget).
+- **Sign in as demo planner**: Hazel, planning *Hazel's Wedding* (May 13, 2027, Cebu City, 150 pax, ₱475k budget).
 - **Sign in as demo vendor**: Inday, who runs *Lechon ni Inday*.
 
 You can also sign up as a new user with any email. In local mode the magic link is shown on screen (and printed in the server log) instead of being emailed.
@@ -29,13 +29,13 @@ To start over, use **Reset demo data** (planner: Saved & settings; vendor: Shop)
 
 ## Demo script (about 3 minutes)
 
-1. **Sign in as demo planner.** Home shows Sofia's debut, 2 quotes waiting, and *Debut packages in Cebu City*.
-2. Open **Debut Starter** (venue, catering, lights & sounds, host; about ₱125k for 120 pax). Tap **Swap** on the host and pick another, then **Request quotes from all 4**. Four requests appear in the inbox as *Requested*.
+1. **Sign in as demo planner.** Home shows Hazel's wedding, 2 quotes waiting (photo & video, and styling), and *Wedding packages in Cebu City*.
+2. Open **Cebu City Wedding Essentials** (reception hall, buffet, lights & sounds, host; about ₱143k for 150 pax). Tap **Swap** on the host and pick another, then **Request quotes from all 4**. Four requests appear in the inbox as *Requested*.
 3. **Search** "lechon", open **Lechon ni Inday**, tap **Request a quote**, add *Whole lechon (regular)* and *(spicy)*, and **Send request**.
-4. Within a few seconds the demo auto-responder replies in the thread with a **₱18,000 quote**. Tap **Accept & book**, choose GCash on the mock payment screen and **Pay ₱5,400**. The thread confetti-pops to **Booked**, and the vendor's date is blocked.
+4. Within a few seconds the demo auto-responder replies in the thread with a **₱18,000 quote**. Tap **Accept & book**, choose GCash on the mock payment screen and **Pay ₱5,400**. The thread shows **Booking confirmed**, and the vendor's date is blocked.
 5. Open **Event**. The budget bar shows ₱18,000 committed, the Lechon slot is *Booked*, and the package vendors show *Requested* or *Quote in* as their auto-quotes arrive. Tick a checklist item.
-6. Open **Feed**. Save the Bulak Florals 18 roses backdrop, tap **View service**, and send a request for it.
-7. **Sign in as demo vendor** (Saved & settings → Sign out, or open a private window). The dashboard shows new requests, profile views, quotes sent and bookings. Tap **Quote** on Paolo's christening request, adjust the line items, deposit and valid-until date, and **Send quote**. Then try **New post**, **Services** and **Shop** (areas, blocked dates, auto-responder toggle).
+6. Open **Feed**. Save the Bulak Florals wedding reception post, tap **View service**, and send a request for it.
+7. **Sign in as demo vendor** (Saved & settings → Sign out, or open a private window). The dashboard shows new requests, profile views, quotes sent and bookings. Tap **Quote** on Paolo's christening request, adjust the line items, deposit and valid-until date, and **Send quote**. Then publish a **New post** tagged *Wedding*, and try **Services** and **Shop** (areas, blocked dates, auto-responder toggle).
 
 The same script runs as an end-to-end test: `pnpm test:e2e`.
 

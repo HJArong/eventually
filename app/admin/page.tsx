@@ -23,9 +23,9 @@ export default async function Admin() {
         </DemoNote>
         <ul className="grid gap-2">
           {pkgs.map((p) => (
-            <li key={p.id} className="flex items-center gap-3 rounded-2xl border-2 border-ink/15 bg-white p-3">
+            <li key={p.id} className="flex items-center gap-3 rounded-xl border border-line bg-white p-3">
               <div className="min-w-0 flex-1">
-                <p className="font-bold">{p.title}</p>
+                <p className="font-semibold">{p.title}</p>
                 <p className="text-xs text-muted">
                   {catalog.eventTypeBySlug.get(p.eventType)?.name} · {p.vendorCount} vendors · from {formatPeso(p.fromPricePhp)}
                 </p>

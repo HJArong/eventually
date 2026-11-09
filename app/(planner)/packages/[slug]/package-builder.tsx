@@ -67,16 +67,16 @@ export function PackageBuilder({
           const qty = packageLineQty(lines[i]!, pax);
           const swapped = o.vendorId !== slot.current.vendorId;
           return (
-            <li key={slot.category + i} className="pop animate-rise min-w-0 rounded-3xl p-2.5">
+            <li key={slot.category + i} className="card animate-rise min-w-0 rounded-2xl p-2.5">
               <div className="flex gap-3">
-                <div className="relative size-20 shrink-0 overflow-hidden rounded-2xl border-2 border-ink">
+                <div className="relative size-20 shrink-0 overflow-hidden rounded-xl bg-sand">
                   {o.coverUrl && <Image src={o.coverUrl} alt="" fill sizes="80px" className="object-cover" />}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[11px] font-extrabold tracking-wider text-ube uppercase">
-                    {slot.category} {swapped && <span className="ml-1 rounded-full bg-mango px-1.5 text-ink">swapped</span>}
+                  <p className="text-xs font-medium text-rose-600">
+                    {slot.category} {swapped && <span className="ml-1 rounded-full bg-rose-50 px-1.5 text-rose-700">swapped</span>}
                   </p>
-                  <Link href={`/vendors/${o.vendorSlug}`} className="font-display text-[17px] leading-tight font-extrabold hover:underline">
+                  <Link href={`/vendors/${o.vendorSlug}`} className="text-base leading-tight font-semibold hover:underline">
                     {o.vendorName}
                   </Link>
                   <p className="truncate text-sm text-muted">
@@ -85,12 +85,12 @@ export function PackageBuilder({
                     {qty > 1 && ` × ${qty}`}
                   </p>
                   <div className="mt-1 flex items-center justify-between">
-                    <span className="text-sm font-extrabold">{formatPeso(estimate.lines[i]!.total)}</span>
+                    <span className="text-sm font-semibold">{formatPeso(estimate.lines[i]!.total)}</span>
                     {slot.alternatives.length > 0 && (
                       <button
                         type="button"
                         onClick={() => setSwapping(swapping === i ? null : i)}
-                        className="inline-flex items-center gap-1 rounded-full border-2 border-ink bg-white px-2.5 py-1 text-xs font-extrabold press"
+                        className="inline-flex items-center gap-1 rounded-full border border-line bg-white px-2.5 py-1 text-xs font-medium text-ink-soft press"
                         aria-expanded={swapping === i}
                       >
                         <ArrowLeftRight className="size-3.5" /> Swap
@@ -100,9 +100,9 @@ export function PackageBuilder({
                 </div>
               </div>
               {swapping === i && (
-                <div className="mt-3 grid gap-2 border-t-2 border-dashed border-ink/15 pt-3">
+                <div className="mt-3 grid gap-2 border-t border-dashed border-line pt-3">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-extrabold text-muted uppercase">Other {slot.category.toLowerCase()} vendors</p>
+                    <p className="text-xs font-medium text-muted">Other {slot.category.toLowerCase()} vendors</p>
                     <button type="button" onClick={() => setSwapping(null)} aria-label="Close" className="text-muted">
                       <X className="size-4" />
                     </button>
@@ -113,26 +113,27 @@ export function PackageBuilder({
                       <button
                         type="button"
                         key={alt.vendorId}
+                        data-alternative
                         onClick={() => {
                           setChosen((prev) => prev.map((p, k) => (k === i ? alt : p)));
                           setSwapping(null);
                         }}
                         className={cn(
-                          "flex items-center gap-2 rounded-2xl border-2 p-2 text-left",
-                          active ? "border-ink bg-mango-50" : "border-ink/10 bg-white",
+                          "flex items-center gap-2 rounded-xl border p-2 text-left",
+                          active ? "border-rose-200 bg-rose-50" : "border-line bg-white",
                         )}
                       >
-                        <div className="relative size-10 shrink-0 overflow-hidden rounded-xl border-2 border-ink">
+                        <div className="relative size-10 shrink-0 overflow-hidden rounded-xl bg-sand">
                           {alt.coverUrl && <Image src={alt.coverUrl} alt="" fill sizes="40px" className="object-cover" />}
                         </div>
                         <span className="min-w-0 flex-1">
-                          <span className="block truncate text-sm font-bold">{alt.vendorName}</span>
+                          <span className="block truncate text-sm font-semibold">{alt.vendorName}</span>
                           <span className="block truncate text-xs text-muted">
-                            <Star className="inline size-3 fill-mango" /> {alt.rating.toFixed(1)} · {alt.areaName} · {formatPeso(alt.pricePhp)}
+                            <Star className="inline size-3 fill-rose-500 text-rose-500" /> {alt.rating.toFixed(1)} · {alt.areaName} · {formatPeso(alt.pricePhp)}
                             {UNIT_LABEL[alt.unit]}
                           </span>
                         </span>
-                        {active && <Check className="size-4 shrink-0" />}
+                        {active && <Check className="size-4 shrink-0 text-rose-600" />}
                       </button>
                     );
                   })}
@@ -143,19 +144,19 @@ export function PackageBuilder({
         })}
       </ul>
 
-      <div className="mt-4 flex items-center justify-between rounded-3xl border-2 border-ink bg-ube-50 p-4">
+      <div className="mt-4 flex items-center justify-between rounded-2xl bg-rose-50 p-4">
         <div>
-          <p className="font-display text-lg leading-tight font-extrabold">Est. total for {pax} pax</p>
+          <p className="text-base leading-tight font-semibold">Est. total for {pax} pax</p>
           <p className="text-xs text-muted">Estimate only. Final price via vendor quotes.</p>
         </div>
-        <p className="font-display text-2xl font-extrabold" aria-live="polite">
+        <p className="font-display text-2xl font-semibold" aria-live="polite">
           {formatPeso(estimate.total)}
         </p>
       </div>
 
       <input type="hidden" name="notes" value={`Hi! Requesting a quote for ${eventTitle} (${pax} pax) through the Eventually package.`} />
       {state.error && (
-        <p role="alert" className="mt-3 text-sm font-semibold text-sunset">
+        <p role="alert" className="mt-3 text-sm font-semibold text-danger">
           {state.error}
         </p>
       )}

@@ -13,26 +13,26 @@ export default async function ChooseRole() {
   return (
     <main className="flex min-h-dvh flex-col px-5 pt-6 pb-10">
       <Logo size={30} />
-      <h1 className="mt-10 text-[34px] leading-tight font-extrabold">Welcome! What brings you here?</h1>
+      <h1 className="mt-10 text-[34px] leading-tight font-semibold">Welcome! What brings you here?</h1>
       <form action={chooseRole} className="mt-8 grid gap-4">
         <div>
           <Label htmlFor="displayName">Your first name</Label>
-          <Input id="displayName" name="displayName" defaultValue={viewer.displayName} placeholder="e.g. Bea" required />
+          <Input id="displayName" name="displayName" defaultValue={viewer.displayName} placeholder="e.g. Hazel" required />
         </div>
         <fieldset className="grid gap-3">
           <legend className="sr-only">Choose your role</legend>
           {[
-            { value: "planner", title: "I'm planning", body: "A debut, wedding, binyag, party or fiesta.", icon: CalendarHeart, tone: "bg-mango" },
-            { value: "vendor", title: "I'm a vendor", body: "Get qualified inquiries and send quotes fast.", icon: Store, tone: "bg-ube-100" },
+            { value: "planner", title: "I'm planning", body: "A debut, wedding, binyag, party or fiesta.", icon: CalendarHeart, tone: "bg-rose-50 text-rose-600" },
+            { value: "vendor", title: "I'm a vendor", body: "Get qualified inquiries and send quotes fast.", icon: Store, tone: "bg-sand text-ink-soft" },
           ].map((r, i) => (
             <label key={r.value} className="cursor-pointer">
               <input type="radio" name="role" value={r.value} defaultChecked={i === 0} className="peer sr-only" />
-              <span className="flex items-center gap-4 rounded-3xl border-2 border-ink/15 bg-white p-4 transition peer-checked:border-ink peer-checked:shadow-pop">
-                <span className={`flex size-14 shrink-0 items-center justify-center rounded-2xl border-2 border-ink ${r.tone}`}>
+              <span className="flex items-center gap-4 rounded-2xl border border-line bg-white p-4 transition peer-checked:border-rose-300 peer-checked:ring-3 peer-checked:ring-rose-100">
+                <span className={`flex size-14 shrink-0 items-center justify-center rounded-xl border border-line ${r.tone}`}>
                   <r.icon className="size-7" />
                 </span>
                 <span>
-                  <span className="block font-display text-xl font-extrabold">{r.title}</span>
+                  <span className="block font-display text-xl font-semibold">{r.title}</span>
                   <span className="block text-sm text-muted">{r.body}</span>
                 </span>
               </span>
