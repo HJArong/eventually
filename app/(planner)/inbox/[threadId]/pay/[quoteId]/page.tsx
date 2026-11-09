@@ -1,10 +1,13 @@
 import { and, eq } from "drizzle-orm";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { AppHeader } from "@/components/app-header";
+import { Thread } from "@/components/thread-view";
 import { getDb } from "@/lib/db";
 import { bookingRequests, events, quotes, threads, vendors } from "@/lib/db/schema";
 import { requireRole } from "@/lib/auth/session";
 import { quoteTotals } from "@/lib/domain/pricing";
+import { getCatalog } from "@/lib/queries/catalog";
+import { getThreadView } from "@/lib/queries/inbox";
 import { assertUuid, ForbiddenError } from "@/lib/services/access";
 import { PaySheet } from "./pay-sheet";
 
@@ -34,9 +37,14 @@ export default async function PayDeposit({ params }: PageProps<"/inbox/[threadId
   if (!["accepted", "quoted"].includes(row.request.status)) redirect(`/inbox/${threadId}`);
 
   const { deposit, balance, total } = quoteTotals([{ label: "", qty: 1, unitPricePhp: row.quote.totalPhp }], row.quote.depositPct);
+  const [view, catalog] = await Promise.all([getThreadView(viewer, threadId), getCatalog()]);
   return (
-    <main className="min-h-dvh bg-ink/60">
-      <AppHeader title="Pay deposit" back={`/inbox/${threadId}`} />
+    <>
+      <div inert aria-hidden>
+        <Thread view={view} catalog={catalog} basePath="/inbox" />
+      </div>
+      <Link href={`/inbox/${threadId}`} aria-label="Close payment" className="fixed inset-0 z-[45] animate-pop-in bg-ink/55 backdrop-blur-[1px]" />
+      <h1 className="sr-only">Pay deposit</h1>
       <PaySheet
         threadId={threadId}
         quoteId={quoteId}
@@ -47,6 +55,6 @@ export default async function PayDeposit({ params }: PageProps<"/inbox/[threadId
         total={total}
         depositPct={row.quote.depositPct}
       />
-    </main>
+    </>
   );
 }

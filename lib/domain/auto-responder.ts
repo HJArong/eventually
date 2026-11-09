@@ -1,8 +1,7 @@
 import { addDays, firstName, formatDate } from "@/lib/format";
 import type { QuoteLine, RequestedService } from "./types";
 
-/** Seconds between a request and the canned reply, staggered when several requests go out at once. */
-export const AUTO_REPLY_DELAY_SECONDS = 6;
+/** Extra delay per request when several go out at once, so replies trickle in. */
 export const AUTO_REPLY_STAGGER_SECONDS = 4;
 
 const DELIVERY_CATEGORIES = new Set(["lechon", "catering", "cakes", "mobile-bar"]);

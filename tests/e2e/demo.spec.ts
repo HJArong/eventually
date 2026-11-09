@@ -25,9 +25,11 @@ async function scrollIntoViewSlowly(page: Page, selector: ReturnType<Page["getBy
   await beat(page, PACE / 2);
 }
 
-test("demo script: planner books, vendor quotes", async ({ page }) => {
+test("demo script: planner books, vendor quotes", async ({ page, browser }, testInfo) => {
   test.setTimeout(300_000);
-  await resetDemo(page);
+  const setup = await browser.newContext({ baseURL: testInfo.project.use.baseURL });
+  await resetDemo(await setup.newPage());
+  await setup.close();
 
   await page.goto("/");
   await shot(page, "01-landing");
@@ -130,7 +132,12 @@ test("demo script: planner books, vendor quotes", async ({ page }) => {
   await beat(page);
 
   // Vendor side: dashboard → quote a request
-  await signInAs(page, "vendor");
+  await page.context().clearCookies();
+  await page.goto("/sign-in#demo");
+  await scrollIntoViewSlowly(page, page.getByText("One-click demo"));
+  await beat(page);
+  await page.getByRole("button", { name: /Sign in as demo vendor/ }).click();
+  await page.waitForURL(/\/vendor$/);
   await beat(page);
   await shot(page, "18-vendor-dashboard");
   await page.getByRole("link", { name: "Quote" }).first().click();
@@ -143,6 +150,13 @@ test("demo script: planner books, vendor quotes", async ({ page }) => {
   await shot(page, "20-vendor-quote-sent");
 
   await page.goto("/vendor/posts/new");
+  await page.locator("label:has(input[name=samplePhotos])").first().click();
+  await page.getByLabel("Caption").pressSequentially("Two lechon for Sofia's debut this March!", { delay: PACE ? 25 : 0 });
+  await page.locator("label", { hasText: /^Debut$/ }).click();
   await shot(page, "21-vendor-new-post");
-  await beat(page);
+  await page.getByRole("button", { name: "Publish to feed" }).click();
+  await page.waitForURL(/\/vendor\/feed\?posted=1/);
+  await expect(page.getByText("Published!")).toBeVisible();
+  await shot(page, "22-vendor-post-published");
+  await beat(page, PACE * 2);
 });

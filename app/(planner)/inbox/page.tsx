@@ -2,7 +2,7 @@ import { AppHeader } from "@/components/app-header";
 import { InboxList } from "@/components/inbox-list";
 import { LiveRefresh } from "@/components/live-refresh";
 import { ChipLink } from "@/components/ui";
-import { requirePlannerEvent } from "@/lib/planner";
+import { requirePlannerEvent, tick } from "@/lib/planner";
 import { getInbox } from "@/lib/queries/inbox";
 
 export const metadata = { title: "Inbox" };
@@ -11,6 +11,7 @@ export default async function Inbox({ searchParams }: PageProps<"/inbox">) {
   const { viewer } = await requirePlannerEvent();
   const { filter: raw, sent } = await searchParams;
   const filter = raw === "quotes" || raw === "unread" ? raw : "all";
+  await tick();
   const [items, all] = await Promise.all([getInbox(viewer, "planner", filter), getInbox(viewer, "planner")]);
   const quoteCount = all.filter((i) => i.status === "quoted" || i.status === "accepted").length;
   const unreadCount = all.filter((i) => i.unread > 0).length;

@@ -95,7 +95,7 @@ tests/unit, tests/e2e
 
 **Booking requests** follow `draft → requested → quoted → accepted → deposit_paid → confirmed`, with side exits *declined* (vendor), *expired* (quote past its valid-until date) and *cancelled* (planner). Transitions and allowed actors are defined in [`lib/domain/status.ts`](lib/domain/status.ts) and enforced in every service call. Each event-vendor pair has one thread; requests, quotes and system events appear in it as cards.
 
-**Demo auto-responder:** in demo mode, a request to a seeded vendor gets a canned quote 6 seconds later (staggered when several go out at once), built from the requested services with free delivery for food vendors and a 30% deposit. It runs lazily on page loads and polls, so it also works on serverless hosts. Vendors created through onboarding start with it off, and every vendor can toggle it.
+**Demo auto-responder:** in demo mode, a request to a seeded vendor gets a canned quote 6 seconds later (`DEMO_AUTO_REPLY_DELAY`; staggered when several go out at once), built from the requested services with free delivery for food vendors and a 30% deposit. It runs lazily on page loads and polls, so it also works on serverless hosts. Vendors created through onboarding start with it off, and every vendor can toggle it.
 
 **Payments** go through a `PaymentProvider` interface ([`lib/domain/payments.ts`](lib/domain/payments.ts)). The `MockPaymentProvider` records a deposit in `mock_payments` and always succeeds; a PayMongo or Xendit adapter (GCash, Maya, cards) can replace it without touching the booking flow.
 

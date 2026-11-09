@@ -4,6 +4,8 @@ export const config = {
   /** Demo logins, "Reset demo" and the auto-responder. On unless DEMO_MODE=false. */
   demoMode: env.DEMO_MODE !== "false",
   autoResponder: env.DEMO_MODE !== "false" && env.DEMO_AUTO_RESPONDER !== "false",
+  /** Seconds before a seeded vendor auto-quotes. */
+  autoReplyDelaySeconds: Math.max(0, Number(env.DEMO_AUTO_REPLY_DELAY ?? 6) || 0),
   databaseUrl: env.DATABASE_URL || null,
   pgliteDir: env.PGLITE_DIR || ".data/pglite",
   uploadsDir: env.UPLOADS_DIR || ".data/uploads",

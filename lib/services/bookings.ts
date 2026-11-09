@@ -16,7 +16,7 @@ import {
   vendors,
 } from "@/lib/db/schema";
 import type { Viewer } from "@/lib/auth/session";
-import { AUTO_REPLY_DELAY_SECONDS, AUTO_REPLY_STAGGER_SECONDS, buildAutoQuote } from "@/lib/domain/auto-responder";
+import { AUTO_REPLY_STAGGER_SECONDS, buildAutoQuote } from "@/lib/domain/auto-responder";
 import { quoteTotals } from "@/lib/domain/pricing";
 import { assertTransition, type BookingStatus } from "@/lib/domain/status";
 import type { QuoteLine, RequestedService } from "@/lib/domain/types";
@@ -105,7 +105,7 @@ export async function createBookingRequests(
       const thread = await ensureThread(tx, event.id, vendor.id, viewer.id);
       const autoReplyAt =
         config.autoResponder && vendor.autoRespond
-          ? new Date(now.getTime() + (AUTO_REPLY_DELAY_SECONDS + i * AUTO_REPLY_STAGGER_SECONDS) * 1000)
+          ? new Date(now.getTime() + (config.autoReplyDelaySeconds + i * AUTO_REPLY_STAGGER_SECONDS) * 1000)
           : null;
       const [request] = await tx
         .insert(bookingRequests)

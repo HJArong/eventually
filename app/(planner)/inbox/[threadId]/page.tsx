@@ -4,6 +4,7 @@ import { Thread } from "@/components/thread-view";
 import { Celebrate } from "@/components/thread-client";
 import { getDb } from "@/lib/db";
 import { requireRole } from "@/lib/auth/session";
+import { tick } from "@/lib/planner";
 import { getCatalog } from "@/lib/queries/catalog";
 import { getThreadView } from "@/lib/queries/inbox";
 import { ForbiddenError } from "@/lib/services/access";
@@ -15,6 +16,7 @@ export default async function PlannerThread({ params, searchParams }: PageProps<
   const viewer = await requireRole("planner");
   const { threadId } = await params;
   const { booked } = await searchParams;
+  await tick();
   const view = await getThreadView(viewer, threadId).catch((err) => {
     if (err instanceof ForbiddenError) notFound();
     throw err;
