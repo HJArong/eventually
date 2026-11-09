@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1d1233;
+  --color-ink-soft: #3b2f52;
+  --color-muted: #6e6482;
+  --color-line: #e7dccd;
+  --color-cream: #fff8ef;
+  --color-sand: #f6ecdf;
+  --color-ube: #6b3fd4;
+  --color-ube-50: #f4efff;
+  --color-ube-100: #e7dcff;
+  --color-ube-700: #4f2aa6;
+  --color-mango: #ffc23d;
+  --color-mango-50: #fff8e3;
+  --color-mango-100: #ffeebd;
+  --color-sunset: #ff6b4a;
+  --color-sunset-50: #fff1ec;
+  --color-sunset-100: #ffd9cf;
+  --color-calamansi: #5fae2e;
+  --color-calamansi-50: #effae6;
+  --color-calamansi-100: #d9f1c6;
+  --color-sky: #2f8fff;
+  --color-gcash: #0a5bff;
+
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui;
+
+  --shadow-pop: 3px 3px 0 0 var(--color-ink);
+  --shadow-pop-sm: 2px 2px 0 0 var(--color-ink);
+  --shadow-pop-lg: 5px 5px 0 0 var(--color-ink);
+
+  --animate-pop-in: pop-in 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.3) both;
+  --animate-rise: rise 0.4s ease-out both;
+  --animate-wiggle: wiggle 0.6s ease-in-out;
+
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: scale(0.92) translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes wiggle {
+    0%,
+    100% {
+      transform: rotate(0);
+    }
+    25% {
+      transform: rotate(-8deg) scale(1.15);
+    }
+    75% {
+      transform: rotate(8deg) scale(1.15);
+    }
+  }
+}
+
+/* Sticker-style surfaces: ink outline plus an offset shadow. */
+@utility pop {
+  border: 2px solid var(--color-ink);
+  box-shadow: var(--shadow-pop);
+  background-color: white;
+}
+@utility pop-sm {
+  border: 2px solid var(--color-ink);
+  box-shadow: var(--shadow-pop-sm);
+}
+@utility press {
+  transition:
+    transform 0.08s ease,
+    box-shadow 0.08s ease;
+  &:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0 0 0 0 var(--color-ink);
+  }
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+@utility confetti-bg {
+  background-color: var(--color-cream);
+  background-image:
+    radial-gradient(circle at 12px 12px, color-mix(in srgb, var(--color-mango) 55%, transparent) 2.5px, transparent 3px),
+    radial-gradient(circle at 36px 30px, color-mix(in srgb, var(--color-sunset) 35%, transparent) 2px, transparent 2.5px),
+    radial-gradient(circle at 24px 44px, color-mix(in srgb, var(--color-ube) 30%, transparent) 2px, transparent 2.5px);
+  background-size: 48px 52px;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  @apply bg-sand font-sans text-ink antialiased;
+}
+
+/* Let grid items shrink so long text truncates instead of pushing cards past the mobile column. */
+@layer base {
+  .grid > * {
+    min-width: 0;
+  }
+}
+
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-ube);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+input,
+textarea,
+select {
+  font-size: 16px; /* prevents iOS zoom */
+}
