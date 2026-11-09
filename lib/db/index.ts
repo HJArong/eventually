@@ -1,13 +1,22 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
+import type { Pool } from "pg";
 import { config, serverless } from "@/lib/config";
+import { describeDbError, describeTarget, parseDatabaseUrl, pgPoolConfig } from "./connection";
 import * as schema from "./schema";
 
 export type DB = NodePgDatabase<typeof schema>;
 
 type RawExec = (sql: string) => Promise<unknown>;
-type Handle = { db: DB; exec: RawExec; close: () => Promise<void>; kind: "pglite" | "postgres"; ephemeral: boolean };
+type Handle = {
+  db: DB;
+  exec: RawExec;
+  close: () => Promise<void>;
+  kind: "pglite" | "postgres";
+  ephemeral: boolean;
+  pool?: Pool;
+};
 
 const globalForDb = globalThis as unknown as { __eventuallyDb?: Promise<Handle> };
 
@@ -29,13 +38,15 @@ async function connect(): Promise<Handle> {
   if (config.databaseUrl) {
     const { Pool } = await import("pg");
     const { drizzle } = await import("drizzle-orm/node-postgres");
-    const pool = new Pool({ connectionString: config.databaseUrl, max: serverless ? 2 : 5 });
+    const pool = new Pool(pgPoolConfig(config.databaseUrl, { serverless }));
+    pool.on("error", (err) => console.warn(`[eventually] idle database connection dropped: ${describeDbError(err)}`));
     return {
       db: drizzle(pool, { schema }),
       exec: (sql) => pool.query(sql),
       close: () => pool.end(),
       kind: "postgres",
       ephemeral: false,
+      pool,
     };
   }
   if (serverless && !config.demoMode) {
@@ -64,7 +75,14 @@ async function connect(): Promise<Handle> {
 
 const MIGRATIONS_DIR = path.join(process.cwd(), "supabase", "migrations");
 
-export async function runMigrations(handle: Handle): Promise<string[]> {
+/**
+ * Applies pending migrations. Each file runs in its own transaction unless `inTransaction`, where the
+ * caller already holds one (and an advisory lock) on a dedicated connection.
+ */
+export async function runMigrations(
+  handle: Pick<Handle, "db" | "exec">,
+  { inTransaction = false }: { inTransaction?: boolean } = {},
+): Promise<string[]> {
   await handle.exec(
     "create table if not exists _eventually_migrations (name text primary key, applied_at timestamptz not null default now())",
   );
@@ -72,9 +90,13 @@ export async function runMigrations(handle: Handle): Promise<string[]> {
     (await handle.db.execute<{ name: string }>("select name from _eventually_migrations")).rows.map((r) => r.name),
   );
   // Migrations applied by the Supabase CLI (supabase start / db push) are recorded by version prefix.
-  const { rows: cli } = await handle.db
-    .execute<{ version: string }>("select version from supabase_migrations.schema_migrations")
-    .catch(() => ({ rows: [] as { version: string }[] }));
+  // Checked with to_regclass, not a failing select, so an enclosing transaction isn't aborted.
+  const { rows: cliTable } = await handle.db.execute<{ t: string | null }>(
+    "select to_regclass('supabase_migrations.schema_migrations')::text as t",
+  );
+  const { rows: cli } = cliTable[0]?.t
+    ? await handle.db.execute<{ version: string }>("select version from supabase_migrations.schema_migrations")
+    : { rows: [] as { version: string }[] };
   const cliVersions = new Set(cli.map((r) => r.version));
   const files = fs
     .readdirSync(MIGRATIONS_DIR)
@@ -84,30 +106,59 @@ export async function runMigrations(handle: Handle): Promise<string[]> {
   for (const file of files) {
     if (applied.has(file) || cliVersions.has(file.split("_")[0]!)) continue;
     const sql = fs.readFileSync(path.join(MIGRATIONS_DIR, file), "utf8");
-    await handle.exec(`begin;\n${sql}\n;insert into _eventually_migrations (name) values ('${file}');\ncommit;`);
+    const body = `${sql}\n;insert into _eventually_migrations (name) values ('${file}');`;
+    await handle.exec(inTransaction ? body : `begin;\n${body}\ncommit;`);
     ran.push(file);
   }
   return ran;
+}
+
+async function seedIfEmpty(db: DB) {
+  const { rows } = await db.execute<{ n: number }>("select count(*)::int as n from areas");
+  if (rows[0]?.n === 0 && config.demoMode) {
+    const { seedDatabase } = await import("@/supabase/seed");
+    await seedDatabase(db);
+  }
+}
+
+/**
+ * Migrate and seed in one transaction under a transaction-scoped advisory lock, so concurrent cold starts
+ * wait for each other instead of racing, and a timed-out seed rolls back instead of leaving partial data.
+ * Transaction-scoped locks work through Supabase's transaction pooler; session-level locks would not.
+ */
+async function autoMigrateHosted(pool: Pool) {
+  const { drizzle } = await import("drizzle-orm/node-postgres");
+  const client = await pool.connect();
+  try {
+    await client.query("begin");
+    await client.query("select pg_advisory_xact_lock(hashtext('eventually:auto-migrate'))");
+    const db = drizzle(client, { schema });
+    await runMigrations({ db, exec: (sql) => client.query(sql) }, { inTransaction: true });
+    await seedIfEmpty(db);
+    await client.query("commit");
+  } catch (err) {
+    await client.query("rollback").catch(() => {});
+    throw err;
+  } finally {
+    client.release();
+  }
 }
 
 async function init(): Promise<Handle> {
   const handle = await connect();
   if (process.env.EVENTUALLY_SKIP_AUTO_INIT === "true") return handle;
   // Local PGlite is migrated and seeded on first use so `pnpm dev` works with zero setup.
-  // Hosted Postgres is migrated explicitly (pnpm db:migrate or the Supabase CLI) unless DB_AUTO_MIGRATE=true.
-  const autoMigrate = handle.kind === "pglite" || process.env.DB_AUTO_MIGRATE === "true";
-  if (autoMigrate) {
+  // Hosted Postgres is migrated explicitly (pnpm db:seed / db:migrate or the Supabase CLI) unless DB_AUTO_MIGRATE=true.
+  if (handle.kind === "pglite") {
     await runMigrations(handle);
-    const { rows } = await handle.db.execute<{ n: number }>("select count(*)::int as n from areas");
-    if (rows[0]?.n === 0 && config.demoMode) {
-      const { seedDatabase } = await import("@/supabase/seed");
-      await seedDatabase(handle.db);
-    }
+    await seedIfEmpty(handle.db);
+  } else if (process.env.DB_AUTO_MIGRATE === "true") {
+    await autoMigrateHosted(handle.pool!);
   } else {
     const { rows } = await handle.db.execute<{ t: string | null }>("select to_regclass('public.profiles')::text as t");
     if (!rows[0]?.t) {
       throw new Error(
-        "The database at DATABASE_URL has no Eventually tables. Run `DATABASE_URL=... pnpm db:seed` (or db:migrate), or set DB_AUTO_MIGRATE=true.",
+        "the database has no Eventually tables; run `DATABASE_URL=<session pooler url> pnpm db:seed` (or db:migrate), or set DB_AUTO_MIGRATE=true",
       );
     }
   }
@@ -117,12 +168,21 @@ async function init(): Promise<Handle> {
 export function getHandle(): Promise<Handle> {
   if (!globalForDb.__eventuallyDb) {
     globalForDb.__eventuallyDb = init().catch((err) => {
-      console.error("[eventually] database init failed:", err);
+      console.error(`[eventually] database init failed (${dbTarget()}): ${describeDbError(err)}`);
       globalForDb.__eventuallyDb = undefined;
       throw err;
     });
   }
   return globalForDb.__eventuallyDb;
+}
+
+function dbTarget(): string {
+  if (!config.databaseUrl) return "PGlite";
+  try {
+    return describeTarget(parseDatabaseUrl(config.databaseUrl));
+  } catch {
+    return "DATABASE_URL";
+  }
 }
 
 export async function getDb(): Promise<DB> {

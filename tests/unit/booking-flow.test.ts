@@ -19,7 +19,7 @@ let db: DB;
 beforeAll(async () => {
   client = await PGlite.create({ extensions: { pg_trgm } });
   db = drizzle(client, { schema }) as unknown as DB;
-  await runMigrations({ db, exec: (sql) => client.exec(sql), close: () => client.close(), kind: "pglite", ephemeral: true });
+  await runMigrations({ db, exec: (sql) => client.exec(sql) });
   await seedDatabase(db);
 });
 
