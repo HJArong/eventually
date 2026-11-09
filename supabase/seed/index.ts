@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { sql } from "drizzle-orm";
 import type { DB } from "@/lib/db";
 import * as t from "@/lib/db/schema";
@@ -61,6 +60,21 @@ function heroEventDate(today: string, minDays = 60): string {
   }
 }
 
+/**
+ * Stable v4-shaped UUIDs, so every seed (and every in-memory serverless instance) gives the demo
+ * accounts and threads the same ids and session cookies stay valid across instances and resets.
+ */
+function seededUuid(seed: number) {
+  const rand = mulberry32(seed);
+  return () => {
+    const hex = Array.from({ length: 32 }, () => Math.floor(rand() * 16).toString(16));
+    hex[12] = "4";
+    hex[16] = "89ab"[Math.floor(rand() * 4)]!;
+    const h = hex.join("");
+    return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+  };
+}
+
 export type SeedSummary = Record<string, number>;
 
 export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<SeedSummary> {
@@ -68,6 +82,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
   const today = todayISO(now);
   const heroDate = heroEventDate(today);
   const rand = mulberry32(20261109);
+  const uid = seededUuid(20261110);
   const pick = <T,>(arr: readonly T[]): T => arr[Math.floor(rand() * arr.length)]!;
   const between = (lo: number, hi: number) => lo + rand() * (hi - lo);
   const roundPrice = (n: number) => (n >= 2000 ? Math.round(n / 500) * 500 : Math.round(n / 10) * 10);
@@ -102,13 +117,13 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
 
   // Demo people
   const people = {
-    hazel: { id: randomUUID(), name: "Hazel", email: DEMO_PLANNER_EMAIL, role: "planner" as const },
-    inday: { id: randomUUID(), name: "Inday Cabahug", email: DEMO_VENDOR_EMAIL, role: "vendor" as const },
-    curator: { id: randomUUID(), name: "Eventually Curators", email: DEMO_ADMIN_EMAIL, role: "admin" as const },
-    paolo: { id: randomUUID(), name: "Paolo Ybañez", email: "paolo@demo.eventually.app", role: "planner" as const },
-    jen: { id: randomUUID(), name: "Jen Abellana", email: "jen@demo.eventually.app", role: "planner" as const },
-    carla: { id: randomUUID(), name: "Carla Sy", email: "carla@demo.eventually.app", role: "planner" as const },
-    mark: { id: randomUUID(), name: "Mark Tan", email: "mark@demo.eventually.app", role: "planner" as const },
+    hazel: { id: uid(), name: "Hazel", email: DEMO_PLANNER_EMAIL, role: "planner" as const },
+    inday: { id: uid(), name: "Inday Cabahug", email: DEMO_VENDOR_EMAIL, role: "vendor" as const },
+    curator: { id: uid(), name: "Eventually Curators", email: DEMO_ADMIN_EMAIL, role: "admin" as const },
+    paolo: { id: uid(), name: "Paolo Ybañez", email: "paolo@demo.eventually.app", role: "planner" as const },
+    jen: { id: uid(), name: "Jen Abellana", email: "jen@demo.eventually.app", role: "planner" as const },
+    carla: { id: uid(), name: "Carla Sy", email: "carla@demo.eventually.app", role: "planner" as const },
+    mark: { id: uid(), name: "Mark Tan", email: "mark@demo.eventually.app", role: "planner" as const },
   };
   await db.insert(t.profiles).values(
     Object.values(people).map((p) => ({ id: p.id, role: p.role, displayName: p.name, email: p.email, isDemo: true })),
@@ -135,7 +150,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
   for (const category of CATEGORIES.map((c) => c.slug)) {
     const pool = CATEGORY_IMAGES[category].flatMap((img) => [`${img}`, `${img}-2`, `${img}-3`]);
     VENDORS[category].forEach((seed, idx) => {
-      const id = randomUUID();
+      const id = uid();
       const templates = SERVICE_TEMPLATES[category];
       const services = (
         seed.services ??
@@ -148,7 +163,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
           maxQty: tpl.maxQty,
         }))
       ).map((svc, i) => ({
-        id: randomUUID(),
+        id: uid(),
         vendorId: id,
         name: svc.name,
         description: svc.description,
@@ -264,7 +279,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
   allVendors.forEach((v, vi) => {
     const n = extraPostCategories.has(v.category) ? 3 : 2;
     for (let k = 0; k < n; k++) {
-      const id = randomUUID();
+      const id = uid();
       const eventTag = pick(CATEGORY_EVENT_TAGS[v.category]);
       const area = rand() < 0.6 ? v.areaId : areaId[pick(allAreaSlugs)];
       const caption = CAPTIONS[v.category][(vi + k) % CAPTIONS[v.category].length]!
@@ -300,7 +315,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
 
   // The hero post on home and in the feed: a stylist's wedding reception, posted 2 hours ago.
   const bulak = V("Bulak Florals Cebu");
-  const heroPostId = randomUUID();
+  const heroPostId = uid();
   postRows.push({
     id: heroPostId,
     vendorId: bulak.id,
@@ -323,7 +338,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
   // Curated packages
   let packageItemCount = 0;
   for (const [i, p] of PACKAGES.entries()) {
-    const id = randomUUID();
+    const id = uid();
     await db.insert(t.packages).values({
       id,
       title: p.title,
@@ -361,7 +376,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
     budgetPhp: number;
     doneTasks?: number;
   }) {
-    const id = randomUUID();
+    const id = uid();
     await db.insert(t.events).values({
       id,
       plannerId: input.plannerId,
@@ -412,7 +427,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
         pricePhp: svc.pricePhp,
       };
     });
-    const requestId = randomUUID();
+    const requestId = uid();
     await db.insert(t.bookingRequests).values({
       id: requestId,
       eventId: ev.id,
@@ -429,7 +444,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
       createdAt: input.requestedAt,
       updatedAt: input.quote?.at ?? input.requestedAt,
     });
-    const threadId = randomUUID();
+    const threadId = uid();
     const msgs: (typeof t.messages.$inferInsert)[] = [
       {
         threadId,
@@ -453,7 +468,7 @@ export async function seedDatabase(db: DB, opts: { now?: Date } = {}): Promise<S
     }
     let quoteId: string | null = null;
     if (input.quote) {
-      quoteId = randomUUID();
+      quoteId = uid();
       const items =
         input.quote.items ?? requested.map((r) => ({ label: r.name, qty: r.qty, unitPricePhp: r.pricePhp }));
       const total = items.reduce((sum, i) => sum + i.qty * i.unitPricePhp, 0);

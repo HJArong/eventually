@@ -1,39 +1,64 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { config } from "@/lib/config";
+import { config, serverless } from "@/lib/config";
 import * as schema from "./schema";
 
 export type DB = NodePgDatabase<typeof schema>;
 
 type RawExec = (sql: string) => Promise<unknown>;
-type Handle = { db: DB; exec: RawExec; close: () => Promise<void>; kind: "pglite" | "postgres" };
+type Handle = { db: DB; exec: RawExec; close: () => Promise<void>; kind: "pglite" | "postgres"; ephemeral: boolean };
 
 const globalForDb = globalThis as unknown as { __eventuallyDb?: Promise<Handle> };
+
+/** PGlite data dir, or null for in-memory when the configured dir can't be written (read-only host). */
+function pgliteDataDir(): string | null {
+  if (config.pgliteDir === "memory") return null;
+  const dir = path.resolve(config.pgliteDir);
+  try {
+    fs.mkdirSync(dir, { recursive: true });
+    fs.accessSync(dir, fs.constants.W_OK);
+    return dir;
+  } catch (err) {
+    console.warn(`[eventually] PGlite dir ${dir} is not writable (${(err as Error).message}); using an in-memory database.`);
+    return null;
+  }
+}
 
 async function connect(): Promise<Handle> {
   if (config.databaseUrl) {
     const { Pool } = await import("pg");
     const { drizzle } = await import("drizzle-orm/node-postgres");
-    const pool = new Pool({ connectionString: config.databaseUrl, max: 5 });
+    const pool = new Pool({ connectionString: config.databaseUrl, max: serverless ? 2 : 5 });
     return {
       db: drizzle(pool, { schema }),
       exec: (sql) => pool.query(sql),
       close: () => pool.end(),
       kind: "postgres",
+      ephemeral: false,
     };
+  }
+  if (serverless && !config.demoMode) {
+    throw new Error(
+      "DATABASE_URL is not set. With DEMO_MODE=false a serverless deployment needs a hosted Postgres (Supabase or Neon): set DATABASE_URL and run `pnpm db:migrate`.",
+    );
   }
   const { PGlite } = await import("@electric-sql/pglite");
   const { pg_trgm } = await import("@electric-sql/pglite/contrib/pg_trgm");
   const { drizzle } = await import("drizzle-orm/pglite");
-  const dir = path.resolve(config.pgliteDir);
-  fs.mkdirSync(dir, { recursive: true });
-  const client = await PGlite.create(dir, { extensions: { pg_trgm } });
+  const dir = pgliteDataDir();
+  if (!dir && serverless) {
+    console.warn(
+      "[eventually] DATABASE_URL is not set: serving the demo from an in-memory database. Changes reset on cold start and are not shared between instances.",
+    );
+  }
+  const client = await PGlite.create(dir ?? "memory://", { extensions: { pg_trgm } });
   return {
     db: drizzle(client, { schema }) as unknown as DB,
     exec: (sql) => client.exec(sql),
     close: () => client.close(),
     kind: "pglite",
+    ephemeral: !dir,
   };
 }
 
@@ -78,6 +103,13 @@ async function init(): Promise<Handle> {
       const { seedDatabase } = await import("@/supabase/seed");
       await seedDatabase(handle.db);
     }
+  } else {
+    const { rows } = await handle.db.execute<{ t: string | null }>("select to_regclass('public.profiles')::text as t");
+    if (!rows[0]?.t) {
+      throw new Error(
+        "The database at DATABASE_URL has no Eventually tables. Run `DATABASE_URL=... pnpm db:seed` (or db:migrate), or set DB_AUTO_MIGRATE=true.",
+      );
+    }
   }
   return handle;
 }
@@ -85,6 +117,7 @@ async function init(): Promise<Handle> {
 export function getHandle(): Promise<Handle> {
   if (!globalForDb.__eventuallyDb) {
     globalForDb.__eventuallyDb = init().catch((err) => {
+      console.error("[eventually] database init failed:", err);
       globalForDb.__eventuallyDb = undefined;
       throw err;
     });
@@ -94,6 +127,11 @@ export function getHandle(): Promise<Handle> {
 
 export async function getDb(): Promise<DB> {
   return (await getHandle()).db;
+}
+
+/** In-memory demo database: data resets on cold start and isn't shared across serverless instances. */
+export async function isEphemeralDb(): Promise<boolean> {
+  return (await getHandle()).ephemeral;
 }
 
 export { schema };
